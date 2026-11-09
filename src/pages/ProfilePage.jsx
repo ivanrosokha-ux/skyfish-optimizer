@@ -1,9 +1,28 @@
+import { useEffect, useState } from 'react';
 import { usePlayerStore } from '../store/usePlayerStore';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import styles from './ProfilePage.module.css';
 
 export default function ProfilePage() {
+  const { player } = useParams();
+  const navigate = useNavigate();
   const { username, profile, stats, setUsername } = usePlayerStore();
+  const [searchInput, setSearchInput] = useState(player || username);
+
+  useEffect(() => {
+    if (player && player !== username) {
+      setUsername(player);
+      setSearchInput(player);
+    }
+  }, [player, username, setUsername]);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchInput.trim()) {
+      setUsername(searchInput.trim());
+      navigate(`/profile/${encodeURIComponent(searchInput.trim())}`);
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -18,22 +37,24 @@ export default function ProfilePage() {
 
       {/* Search Bar & Profiles */}
       <div className={styles.searchSection}>
-        <div>
+        <form onSubmit={handleSearch}>
           <label className={styles.searchLabel}>Minecraft nickname</label>
           <div className={styles.searchBar}>
             <div className={styles.inputWrapper}>
               <span className={styles.inputIcon}>🔍</span>
               <input
                 type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
                 className={styles.searchInput}
                 placeholder="ReefRunner"
               />
             </div>
-            <button className={styles.searchButton}>Search</button>
+            <button type="submit" className={styles.searchButton}>
+              Search
+            </button>
           </div>
-        </div>
+        </form>
 
         {/* Profiles pills */}
         <div className={styles.pillsRow}>

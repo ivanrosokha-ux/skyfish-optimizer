@@ -1,9 +1,7 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import styles from './Navbar.module.css';
 
 export default function Navbar() {
-  const location = useLocation();
-
   const links = [
     { path: '/', label: 'Profile' },
     { path: '/optimizer', label: 'Optimizer' },
@@ -18,18 +16,16 @@ export default function Navbar() {
       </Link>
 
       <nav className={styles.nav}>
-        {links.map((link) => {
-          const isActive = location.pathname === link.path;
-          return (
-            <Link
-              key={link.path}
-              to={link.path}
-              className={`${styles.link} ${isActive ? styles.linkActive : ''}`}
-            >
-              {link.label}
-            </Link>
-          );
-        })}
+        {links.map((link) => (
+          <NavLink
+            key={link.path}
+            to={link.path}
+            end={link.path === '/'}
+            className={({ isActive }) => `${styles.link} ${isActive ? styles.linkActive : ''}`}
+          >
+            {link.label}
+          </NavLink>
+        ))}
       </nav>
     </header>
   );
