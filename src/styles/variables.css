@@ -1,0 +1,18 @@
+:root {
+  --bg-page: #1a1411;
+  --bg-card: #241c18;
+  --bg-card-sub: #1a1411;
+  --border-color: #3a2f29;
+  --border-subtle: rgba(58, 47, 41, 0.6);
+  --text-main: #f5f1ec;
+  --text-muted: #a39a92;
+  --color-accent: #1fa64a;
+  --color-accent-hover: #26bd56;
+  --color-gold: #d9a21b;
+  --color-track: #4a413b;
+  --color-price: #f2a93b;
+  --color-gain: #3ed16b;
+  --font-sans:
+    'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

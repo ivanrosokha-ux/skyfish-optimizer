@@ -1,0 +1,12 @@
+.appContainer {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: var(--bg-page);
+  color: var(--text-main);
+}
+
+.mainContent {
+  flex: 1;
+}
