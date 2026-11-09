@@ -11,13 +11,18 @@ export function getPlayerProfile(req, res) {
   const key = nickname.toLowerCase().trim();
   const player = players[key];
 
-  if (player && player.profiles[profileName]) {
+  if (player) {
+    const matchedProfileName = player.profiles[profileName]
+      ? profileName
+      : Object.keys(player.profiles)[0];
+    const data = player.profiles[matchedProfileName];
+
     return res.json({
       success: true,
       username: player.username,
-      profile: profileName,
+      profile: matchedProfileName,
       profilesList: Object.keys(player.profiles),
-      ...player.profiles[profileName],
+      ...data,
     });
   }
 
