@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { usePlayerStore } from '../store/usePlayerStore';
+import styles from './OptimizerPage.module.css';
 
 export default function OptimizerPage() {
   const { targetStat, setTargetStat, budget, setBudget, addSavedBuild, username, profile } =
@@ -66,40 +67,36 @@ export default function OptimizerPage() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-8 py-10 space-y-7">
+    <div className={styles.container}>
       {/* Title & Player Tag */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+      <div className={styles.topBar}>
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-[#F5F1EC]">Optimizer</h1>
-          <p className="text-[#A39A92] text-sm mt-1">
+          <h1 className={styles.title}>Optimizer</h1>
+          <p className={styles.subtitle}>
             Spend smarter. Rank upgrades by the stats that matter to you.
           </p>
         </div>
-        <div className="text-xs text-[#A39A92] font-mono">
+        <div className={styles.playerTag}>
           {username} / {profile}
         </div>
       </div>
 
       {/* Target Stat Switcher & Filter Chips */}
-      <div className="space-y-4">
-        <div className="flex items-center gap-2">
+      <div className={styles.controlsSection}>
+        <div className={styles.statSwitchRow}>
           {['SCC', 'Fishing Speed', 'Mixed'].map((stat) => (
             <button
               key={stat}
               onClick={() => setTargetStat(stat)}
-              className={`px-4 py-2 rounded-lg text-xs font-semibold transition ${
-                targetStat === stat
-                  ? 'bg-[#1FA64A] text-white shadow-sm'
-                  : 'bg-[#241C18] border border-[#3A2F29] text-[#A39A92] hover:text-[#F5F1EC]'
-              }`}
+              className={targetStat === stat ? styles.statBtnActive : styles.statBtn}
             >
               {stat}
             </button>
           ))}
-          <span className="text-xs text-[#A39A92] ml-auto">SCC = Sea Creature Chance</span>
+          <span className={styles.sccHint}>SCC = Sea Creature Chance</span>
         </div>
 
-        <div className="flex flex-wrap gap-2 text-xs">
+        <div className={styles.filterChips}>
           {['Enchantments', 'Armor', 'Reforges', 'Pet', 'Accessory'].map((filter) => {
             const isSelected = selectedFilters.includes(filter);
             return (
@@ -110,13 +107,9 @@ export default function OptimizerPage() {
                     isSelected ? prev.filter((f) => f !== filter) : [...prev, filter]
                   )
                 }
-                className={`px-3 py-1.5 rounded-lg border transition flex items-center gap-1.5 ${
-                  isSelected
-                    ? 'border-[#1FA64A] bg-[#1A1411] text-[#1FA64A] font-medium'
-                    : 'border-[#3A2F29] bg-[#241C18] text-[#A39A92]'
-                }`}
+                className={isSelected ? styles.filterChipActive : styles.filterChip}
               >
-                {isSelected && <span className="text-[#1FA64A]">✓</span>}
+                {isSelected && <span>✓ </span>}
                 {filter}
               </button>
             );
@@ -125,44 +118,44 @@ export default function OptimizerPage() {
       </div>
 
       {/* Optimizer Grid: Table & Budget Calculator */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className={styles.optimizerGrid}>
         {/* Table (2 cols) */}
-        <div className="lg:col-span-2 bg-[#241C18] border border-[#3A2F29] rounded-2xl p-6 space-y-4 flex flex-col justify-between">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between border-b border-[#3A2F29] pb-3">
+        <div className={styles.tableCard}>
+          <div>
+            <div className={styles.tableHeader}>
               <div>
-                <h2 className="font-bold text-base text-[#F5F1EC]">Recommended upgrades</h2>
-                <p className="text-xs text-[#A39A92] mt-0.5">
+                <h2 className={styles.cardHeading}>Recommended upgrades</h2>
+                <p className={styles.cardSub}>
                   Sorted by lowest cost per +1 percentage point of SCC.
                 </p>
               </div>
-              <span className="text-xs text-[#A39A92]">{upgrades.length} upgrades</span>
+              <span className={styles.countBadge}>{upgrades.length} upgrades</span>
             </div>
 
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
-                <thead className="text-[#A39A92] border-b border-[#3A2F29] text-[11px]">
+            <div className={styles.tableWrap}>
+              <table className={styles.table}>
+                <thead>
                   <tr>
-                    <th className="pb-3 font-normal">Upgrade</th>
-                    <th className="pb-3 font-normal">Type</th>
-                    <th className="pb-3 font-normal">Stat gain</th>
-                    <th className="pb-3 font-normal">Price</th>
-                    <th className="pb-3 font-normal text-right">Cost per +1 stat</th>
+                    <th className={styles.th}>Upgrade</th>
+                    <th className={styles.th}>Type</th>
+                    <th className={styles.th}>Stat gain</th>
+                    <th className={styles.th}>Price</th>
+                    <th className={`${styles.th} ${styles.thRight}`}>Cost per +1 stat</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#3A2F29]/60">
+                <tbody>
                   {upgrades.map((u) => (
-                    <tr key={u.name} className="hover:bg-[#1A1411]/50 transition-colors">
-                      <td className="py-3.5 pr-2">
-                        <div className="font-semibold text-xs text-[#F5F1EC]">{u.name}</div>
-                        <div className="text-[10px] text-[#A39A92] mt-0.5">{u.note}</div>
+                    <tr key={u.name} className={styles.tr}>
+                      <td className={styles.td}>
+                        <div className={styles.upgradeName}>{u.name}</div>
+                        <div className={styles.upgradeNote}>{u.note}</div>
                       </td>
-                      <td className="py-3.5 text-[#A39A92]">{u.type}</td>
-                      <td className="py-3.5 text-[#3ED16B] font-semibold">{u.gain}</td>
-                      <td className="py-3.5 font-mono text-[#F2A93B]">
+                      <td className={`${styles.td} ${styles.typeText}`}>{u.type}</td>
+                      <td className={`${styles.td} ${styles.gainVal}`}>{u.gain}</td>
+                      <td className={`${styles.td} ${styles.priceVal}`}>
                         {u.price.toLocaleString()}
                       </td>
-                      <td className="py-3.5 text-right font-mono text-[#F5F1EC]">
+                      <td className={`${styles.td} ${styles.tdRight} ${styles.costVal}`}>
                         {u.costPerStat}
                       </td>
                     </tr>
@@ -172,67 +165,62 @@ export default function OptimizerPage() {
             </div>
           </div>
 
-          <div className="text-[10px] text-[#A39A92] pt-3 border-t border-[#3A2F29]">
+          <div className={styles.tableFootNote}>
             Prices in coins · pp = percentage points · Estimated gains relative to your current
             gear.
           </div>
         </div>
 
         {/* Budget Calculator (1 col) */}
-        <div className="bg-[#241C18] border border-[#3A2F29] rounded-2xl p-6 space-y-5">
-          <h2 className="font-bold text-base text-[#F5F1EC]">Budget calculator</h2>
+        <div className={styles.calcCard}>
+          <h2 className={styles.cardHeading}>Budget calculator</h2>
 
-          <div className="space-y-2">
-            <label className="text-xs text-[#A39A92] block">Your budget</label>
-            <div className="flex items-center bg-[#1A1411] border border-[#3A2F29] rounded-lg px-3 py-2.5 focus-within:border-[#1FA64A]">
+          <div className={styles.calcField}>
+            <label className={styles.calcLabel}>Your budget</label>
+            <div className={styles.inputBox}>
               <input
                 type="number"
                 value={budget}
                 onChange={(e) => setBudget(Number(e.target.value))}
-                className="w-full bg-transparent text-sm text-[#F5F1EC] font-mono focus:outline-none"
+                className={styles.numInput}
               />
-              <span className="text-xs text-[#A39A92] font-mono ml-2">coins</span>
+              <span className={styles.currencyText}>coins</span>
             </div>
-            <button className="w-full py-2.5 bg-[#1FA64A] hover:bg-[#26bd56] text-white font-semibold text-xs rounded-lg transition shadow-sm">
-              Calculate
-            </button>
+            <button className={styles.calcBtn}>Calculate</button>
           </div>
 
-          <div className="space-y-2 pt-2 border-t border-[#3A2F29] text-xs">
-            <div className="text-[#A39A92]">Recommended purchases</div>
-            <div className="flex justify-between text-[#F5F1EC]">
-              <span>Angler V</span> <span className="font-mono text-[#F2A93B]">400,000</span>
+          <div className={styles.purchasesSection}>
+            <div className={styles.sectionLabel}>Recommended purchases</div>
+            <div className={styles.rowBetween}>
+              <span>Angler V</span> <span className={styles.priceVal}>400,000</span>
             </div>
-            <div className="flex justify-between text-[#F5F1EC]">
-              <span>Submerged</span> <span className="font-mono text-[#F2A93B]">1,200,000</span>
+            <div className={styles.rowBetween}>
+              <span>Submerged</span> <span className={styles.priceVal}>1,200,000</span>
             </div>
-            <div className="flex justify-between text-[#F5F1EC]">
-              <span>Deep Sea Orb</span> <span className="font-mono text-[#F2A93B]">2,400,000</span>
+            <div className={styles.rowBetween}>
+              <span>Deep Sea Orb</span> <span className={styles.priceVal}>2,400,000</span>
             </div>
           </div>
 
-          <div className="space-y-1.5 pt-3 border-t border-[#3A2F29] text-xs">
-            <div className="flex justify-between text-[#A39A92]">
-              <span>Total cost</span>
-              <span className="font-mono text-[#F5F1EC]">4,000,000</span>
+          <div className={styles.totalsSection}>
+            <div className={styles.rowBetween}>
+              <span className={styles.mutedText}>Total cost</span>
+              <span className={styles.monoText}>4,000,000</span>
             </div>
-            <div className="flex justify-between text-[#A39A92]">
-              <span>Remaining budget</span>
-              <span className="font-mono text-[#F5F1EC]">1,000,000</span>
+            <div className={styles.rowBetween}>
+              <span className={styles.mutedText}>Remaining budget</span>
+              <span className={styles.monoText}>1,000,000</span>
             </div>
-            <div className="pt-2">
-              <div className="text-[11px] text-[#A39A92]">Projected Sea Creature Chance</div>
-              <div className="flex items-baseline justify-between mt-0.5">
-                <span className="text-lg font-bold text-[#F5F1EC]">64% → 70%</span>
-                <span className="text-sm font-semibold text-[#3ED16B]">+6 pp</span>
+            <div className={styles.projectedBox}>
+              <div className={styles.projectedLabel}>Projected Sea Creature Chance</div>
+              <div className={styles.projectedValues}>
+                <span className={styles.projectedNumbers}>64% → 70%</span>
+                <span className={styles.gainVal}>+6 pp</span>
               </div>
             </div>
           </div>
 
-          <button
-            onClick={handleSaveBuild}
-            className="w-full py-2.5 bg-[#1A1411] hover:bg-[#201814] border border-[#3A2F29] text-[#F5F1EC] font-semibold text-xs rounded-lg transition"
-          >
+          <button onClick={handleSaveBuild} className={styles.saveBuildBtn}>
             Save build
           </button>
         </div>
