@@ -10,21 +10,25 @@ export default function Navbar() {
   ];
 
   return (
-    <header className="border-b border-surface-border bg-background/80 backdrop-blur sticky top-0 z-50 px-6 py-4 flex items-center justify-between">
-      <Link to="/" className="text-xl font-bold tracking-tight flex items-center gap-2">
-        <span className="text-emerald-500">🎣</span>
-        <span>SkyFish</span>
+    <header className="border-b border-[#28211d] bg-[#181310] px-8 py-5 flex items-center justify-between">
+      <Link
+        to="/"
+        className="text-xl font-bold tracking-tight text-[#e5e2de] hover:text-white transition"
+      >
+        SkyFish
       </Link>
 
-      <nav className="flex items-center gap-6 text-sm font-medium">
+      <nav className="flex items-center gap-8 text-sm">
         {links.map((link) => {
           const isActive = location.pathname === link.path;
           return (
             <Link
               key={link.path}
               to={link.path}
-              className={`transition-colors ${
-                isActive ? 'text-emerald-400 font-semibold' : 'text-zinc-400 hover:text-zinc-200'
+              className={`relative py-1 transition-colors ${
+                isActive
+                  ? 'text-[#269f4d] font-semibold after:absolute after:bottom-[-20px] after:left-0 after:right-0 after:h-[2px] after:bg-[#269f4d]'
+                  : 'text-[#87796a] hover:text-[#e5e2de]'
               }`}
             >
               {link.label}
@@ -32,15 +36,6 @@ export default function Navbar() {
           );
         })}
       </nav>
-
-      <div className="flex items-center gap-3">
-        <Link
-          to="/login"
-          className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-surface border border-surface-border hover:bg-zinc-800 text-zinc-300 transition"
-        >
-          Sign In
-        </Link>
-      </div>
     </header>
   );
 }

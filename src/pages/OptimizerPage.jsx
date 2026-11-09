@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { usePlayerStore } from '../store/usePlayerStore';
 
 export default function OptimizerPage() {
-  const { targetStat, setTargetStat, budget, setBudget, addSavedBuild } = usePlayerStore();
+  const { targetStat, setTargetStat, budget, setBudget, addSavedBuild, username, profile } =
+    usePlayerStore();
   const [selectedFilters, setSelectedFilters] = useState([
     'Enchantments',
     'Armor',
@@ -57,7 +58,7 @@ export default function OptimizerPage() {
   const handleSaveBuild = () => {
     addSavedBuild({
       id: Date.now().toString(),
-      name: `Optimized plan · ${budget.toLocaleString()} coins`,
+      name: `SCC · 5M plan`,
       scc: 70,
       speed: 180,
     });
@@ -65,12 +66,18 @@ export default function OptimizerPage() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-8 space-y-6">
-      <div>
-        <h1 className="text-3xl font-extrabold tracking-tight">Optimizer</h1>
-        <p className="text-zinc-400 text-sm mt-1">
-          Spend smarter. Rank upgrades by the stats that matter to you.
-        </p>
+    <div className="max-w-6xl mx-auto px-8 py-10 space-y-7">
+      {/* Title & Player Tag */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div>
+          <h1 className="text-3xl font-extrabold tracking-tight text-[#e5e2de]">Optimizer</h1>
+          <p className="text-[#87796a] text-sm mt-1">
+            Spend smarter. Rank upgrades by the stats that matter to you.
+          </p>
+        </div>
+        <div className="text-xs text-[#87796a] font-mono">
+          {username} / {profile}
+        </div>
       </div>
 
       {/* Target Stat Switcher & Filter Chips */}
@@ -82,14 +89,14 @@ export default function OptimizerPage() {
               onClick={() => setTargetStat(stat)}
               className={`px-4 py-2 rounded-lg text-xs font-semibold transition ${
                 targetStat === stat
-                  ? 'bg-emerald-600 text-white'
-                  : 'bg-surface border border-surface-border text-zinc-400 hover:text-zinc-200'
+                  ? 'bg-[#269f4d] text-white'
+                  : 'bg-[#241c19] border border-[#382b26] text-[#87796a] hover:text-[#e5e2de]'
               }`}
             >
               {stat}
             </button>
           ))}
-          <span className="text-xs text-zinc-500 ml-auto">SCC = Sea Creature Chance</span>
+          <span className="text-xs text-[#87796a] ml-auto">SCC = Sea Creature Chance</span>
         </div>
 
         <div className="flex flex-wrap gap-2 text-xs">
@@ -103,13 +110,13 @@ export default function OptimizerPage() {
                     isSelected ? prev.filter((f) => f !== filter) : [...prev, filter]
                   )
                 }
-                className={`px-3 py-1.5 rounded-lg border transition ${
+                className={`px-3 py-1.5 rounded-lg border transition flex items-center gap-1.5 ${
                   isSelected
-                    ? 'border-emerald-600 bg-emerald-950/40 text-emerald-300 font-medium'
-                    : 'border-surface-border bg-surface text-zinc-500'
+                    ? 'border-[#269f4d] bg-[#181310] text-[#269f4d] font-medium'
+                    : 'border-[#382b26] bg-[#241c19] text-[#87796a]'
                 }`}
               >
-                {isSelected ? '✓ ' : ''}
+                {isSelected && <span className="text-[#269f4d]">✓</span>}
                 {filter}
               </button>
             );
@@ -120,101 +127,111 @@ export default function OptimizerPage() {
       {/* Optimizer Grid: Table & Budget Calculator */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Table (2 cols) */}
-        <div className="lg:col-span-2 bg-surface border border-surface-border rounded-xl p-6 space-y-4">
-          <div className="flex items-center justify-between border-b border-surface-border pb-3">
-            <div>
-              <h2 className="font-bold text-base text-zinc-100">Recommended upgrades</h2>
-              <p className="text-xs text-zinc-500 mt-0.5">
-                Sorted by lowest cost per +1 percentage point of SCC.
-              </p>
+        <div className="lg:col-span-2 bg-[#241c19] border border-[#382b26] rounded-2xl p-6 space-y-4 flex flex-col justify-between">
+          <div className="space-y-4">
+            <div className="flex items-center justify-between border-b border-[#382b26] pb-3">
+              <div>
+                <h2 className="font-bold text-base text-[#e5e2de]">Recommended upgrades</h2>
+                <p className="text-xs text-[#87796a] mt-0.5">
+                  Sorted by lowest cost per +1 percentage point of SCC.
+                </p>
+              </div>
+              <span className="text-xs text-[#87796a]">{upgrades.length} upgrades</span>
             </div>
-            <span className="text-xs text-zinc-500">{upgrades.length} upgrades</span>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead className="text-[#87796a] border-b border-[#382b26] text-[11px]">
+                  <tr>
+                    <th className="pb-3 font-normal">Upgrade</th>
+                    <th className="pb-3 font-normal">Type</th>
+                    <th className="pb-3 font-normal">Stat gain</th>
+                    <th className="pb-3 font-normal">Price</th>
+                    <th className="pb-3 font-normal text-right">Cost per +1 stat</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#2d221e]">
+                  {upgrades.map((u) => (
+                    <tr key={u.name} className="hover:bg-[#181310]/50 transition-colors">
+                      <td className="py-3.5 pr-2">
+                        <div className="font-semibold text-xs text-[#e5e2de]">{u.name}</div>
+                        <div className="text-[10px] text-[#87796a] mt-0.5">{u.note}</div>
+                      </td>
+                      <td className="py-3.5 text-[#87796a]">{u.type}</td>
+                      <td className="py-3.5 text-[#269f4d] font-semibold">{u.gain}</td>
+                      <td className="py-3.5 font-mono text-[#e5e2de]">
+                        {u.price.toLocaleString()}
+                      </td>
+                      <td className="py-3.5 text-right font-mono text-[#e5e2de]">
+                        {u.costPerStat}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="text-zinc-500 border-b border-surface-border/60 font-mono text-[11px]">
-                <tr>
-                  <th className="pb-2">Upgrade</th>
-                  <th className="pb-2">Type</th>
-                  <th className="pb-2">Stat gain</th>
-                  <th className="pb-2">Price</th>
-                  <th className="pb-2 text-right">Cost per +1 stat</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-surface-border/40">
-                {upgrades.map((u) => (
-                  <tr key={u.name} className="hover:bg-zinc-900/50">
-                    <td className="py-3 pr-2">
-                      <div className="font-semibold text-zinc-200">{u.name}</div>
-                      <div className="text-[10px] text-zinc-500">{u.note}</div>
-                    </td>
-                    <td className="py-3 text-zinc-400">{u.type}</td>
-                    <td className="py-3 text-emerald-400 font-semibold">{u.gain}</td>
-                    <td className="py-3 font-mono text-zinc-300">{u.price.toLocaleString()}</td>
-                    <td className="py-3 text-right font-mono text-emerald-400 font-semibold">
-                      {u.costPerStat}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="text-[10px] text-[#87796a] pt-3 border-t border-[#382b26]">
+            Prices in coins · pp = percentage points · Estimated gains relative to your current
+            gear.
           </div>
         </div>
 
         {/* Budget Calculator (1 col) */}
-        <div className="bg-surface border border-surface-border rounded-xl p-6 space-y-4">
-          <h2 className="font-bold text-base text-zinc-100 border-b border-surface-border pb-3">
-            Budget calculator
-          </h2>
+        <div className="bg-[#241c19] border border-[#382b26] rounded-2xl p-6 space-y-5">
+          <h2 className="font-bold text-base text-[#e5e2de]">Budget calculator</h2>
 
-          <div className="space-y-1.5">
-            <label className="text-xs text-zinc-400">Your budget</label>
-            <div className="flex items-center gap-2">
+          <div className="space-y-2">
+            <label className="text-xs text-[#87796a] block">Your budget</label>
+            <div className="flex items-center bg-[#14100e] border border-[#382b26] rounded-lg px-3 py-2.5 focus-within:border-[#269f4d]">
               <input
                 type="number"
                 value={budget}
                 onChange={(e) => setBudget(Number(e.target.value))}
-                className="w-full bg-black/50 border border-surface-border rounded-lg px-3 py-2 text-sm text-zinc-100 font-mono focus:outline-none focus:border-emerald-500"
+                className="w-full bg-transparent text-sm text-[#e5e2de] font-mono focus:outline-none"
               />
-              <span className="text-xs text-zinc-500 font-mono">coins</span>
+              <span className="text-xs text-[#87796a] font-mono ml-2">coins</span>
             </div>
-            <button className="w-full mt-2 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs rounded-lg transition">
+            <button className="w-full py-2.5 bg-[#269f4d] hover:bg-[#2eb557] text-white font-semibold text-xs rounded-lg transition shadow-sm">
               Calculate
             </button>
           </div>
 
-          <div className="space-y-2 pt-2 border-t border-surface-border text-xs">
-            <div className="text-zinc-500 font-semibold">Recommended purchases:</div>
-            <div className="flex justify-between text-zinc-300">
-              <span>Angler V</span> <span className="font-mono">400,000</span>
+          <div className="space-y-2 pt-2 border-t border-[#382b26] text-xs">
+            <div className="text-[#87796a]">Recommended purchases</div>
+            <div className="flex justify-between text-[#e5e2de]">
+              <span>Angler V</span> <span className="font-mono text-[#87796a]">400,000</span>
             </div>
-            <div className="flex justify-between text-zinc-300">
-              <span>Submerged</span> <span className="font-mono">1,200,000</span>
+            <div className="flex justify-between text-[#e5e2de]">
+              <span>Submerged</span> <span className="font-mono text-[#87796a]">1,200,000</span>
             </div>
-            <div className="flex justify-between text-zinc-300">
-              <span>Deep Sea Orb</span> <span className="font-mono">2,400,000</span>
+            <div className="flex justify-between text-[#e5e2de]">
+              <span>Deep Sea Orb</span> <span className="font-mono text-[#87796a]">2,400,000</span>
             </div>
           </div>
 
-          <div className="space-y-1.5 pt-3 border-t border-surface-border text-xs">
-            <div className="flex justify-between text-zinc-400">
-              <span>Total cost:</span>
-              <span className="font-mono text-zinc-200">4,000,000</span>
+          <div className="space-y-1.5 pt-3 border-t border-[#382b26] text-xs">
+            <div className="flex justify-between text-[#87796a]">
+              <span>Total cost</span>
+              <span className="font-mono text-[#e5e2de]">4,000,000</span>
             </div>
-            <div className="flex justify-between text-zinc-400">
-              <span>Remaining budget:</span>
-              <span className="font-mono text-zinc-200">1,000,000</span>
+            <div className="flex justify-between text-[#87796a]">
+              <span>Remaining budget</span>
+              <span className="font-mono text-[#e5e2de]">1,000,000</span>
             </div>
-            <div className="flex justify-between pt-1 font-bold text-sm">
-              <span>Projected SCC:</span>
-              <span className="text-emerald-400">64% → 70% (+6 pp)</span>
+            <div className="pt-2">
+              <div className="text-[11px] text-[#87796a]">Projected Sea Creature Chance</div>
+              <div className="flex items-baseline justify-between mt-0.5">
+                <span className="text-lg font-bold text-[#e5e2de]">64% → 70%</span>
+                <span className="text-sm font-semibold text-[#269f4d]">+6 pp</span>
+              </div>
             </div>
           </div>
 
           <button
             onClick={handleSaveBuild}
-            className="w-full py-2 bg-surface hover:bg-zinc-800 border border-surface-border text-zinc-200 font-semibold text-xs rounded-lg transition"
+            className="w-full py-2.5 bg-[#181310] hover:bg-[#201814] border border-[#382b26] text-[#e5e2de] font-semibold text-xs rounded-lg transition"
           >
             Save build
           </button>

@@ -5,157 +5,220 @@ export default function ProfilePage() {
   const { username, profile, stats, setUsername } = usePlayerStore();
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-8 space-y-6">
+    <div className="max-w-6xl mx-auto px-8 py-10 space-y-8">
+      {/* Title */}
       <div>
-        <h1 className="text-3xl font-extrabold tracking-tight">
-          Fishing stats for <span className="text-emerald-400">{username}</span> on{' '}
-          <span className="text-emerald-400">{profile}</span>
+        <h1 className="text-3xl font-extrabold tracking-tight text-[#e5e2de]">
+          Fishing stats for <span className="text-[#269f4d]">{username}</span> on{' '}
+          <span className="text-[#269f4d]">{profile}</span>
         </h1>
-        <p className="text-zinc-400 text-sm mt-1">
+        <p className="text-[#87796a] text-sm mt-1">
           Your gear, your stats. A clearer path to your next catch.
         </p>
       </div>
 
-      {/* Search Bar */}
-      <div className="bg-surface border border-surface-border rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div className="flex items-center gap-3 w-full sm:w-auto">
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className="bg-black/50 border border-surface-border rounded-lg px-4 py-2 text-sm text-zinc-100 focus:outline-none focus:border-emerald-500 w-full sm:w-64"
-            placeholder="Minecraft nickname"
-          />
-          <button className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-sm rounded-lg transition">
-            Search
-          </button>
+      {/* Search Bar & Profiles */}
+      <div className="space-y-4">
+        <div>
+          <label className="block text-xs text-[#87796a] mb-1.5 font-medium">
+            Minecraft nickname
+          </label>
+          <div className="flex items-center gap-3 max-w-lg">
+            <div className="relative flex-1">
+              <span className="absolute left-3.5 top-3 text-[#87796a] text-xs">🔍</span>
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="w-full bg-[#14100e] border border-[#382b26] rounded-lg pl-9 pr-4 py-2.5 text-sm text-[#e5e2de] focus:outline-none focus:border-[#269f4d]"
+                placeholder="ReefRunner"
+              />
+            </div>
+            <button className="px-6 py-2.5 bg-[#269f4d] hover:bg-[#2eb557] text-white font-semibold text-sm rounded-lg transition shadow-sm">
+              Search
+            </button>
+          </div>
         </div>
 
-        <div className="flex items-center gap-2 text-xs text-zinc-400">
-          <span>Profiles:</span>
-          <span className="px-2.5 py-1 rounded bg-emerald-950/80 border border-emerald-800 text-emerald-300 font-semibold">
-            ✓ Lime
-          </span>
-          <span className="px-2.5 py-1 rounded bg-black/40 border border-surface-border text-zinc-400">
+        {/* Profiles pills */}
+        <div className="flex items-center gap-2 text-xs">
+          <span className="text-[#87796a]">Profiles</span>
+          <button className="px-3.5 py-1.5 rounded-lg bg-[#269f4d] text-white font-medium flex items-center gap-1.5 shadow-sm">
+            <span>✓</span> Lime
+          </button>
+          <button className="px-3.5 py-1.5 rounded-lg bg-[#241c19] border border-[#382b26] text-[#87796a] hover:text-[#e5e2de] transition">
             Coconut
-          </span>
-          <span className="px-2.5 py-1 rounded bg-black/40 border border-surface-border text-zinc-400">
+          </button>
+          <button className="px-3.5 py-1.5 rounded-lg bg-[#241c19] border border-[#382b26] text-[#87796a] hover:text-[#e5e2de] transition">
             Papaya
-          </span>
+          </button>
         </div>
       </div>
 
-      {/* Main Grid: Gear & Stats */}
+      {/* Main 2-column Grid: Armor & Stats */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Gear Card */}
-        <div className="bg-surface border border-surface-border rounded-xl p-6 space-y-4">
-          <div className="flex items-center justify-between border-b border-surface-border pb-3">
-            <h2 className="font-bold text-base text-zinc-100">Armor & Gear</h2>
-            <div className="flex gap-1 text-xs">
-              <span className="px-2.5 py-1 rounded bg-emerald-600 text-white font-medium cursor-pointer">
+        {/* Armor & Gear Card */}
+        <div className="bg-[#241c19] border border-[#382b26] rounded-2xl p-6 space-y-5">
+          <div className="flex items-center justify-between">
+            <h2 className="font-bold text-base text-[#e5e2de]">Armor</h2>
+            <div className="flex items-center gap-1 bg-[#181310] p-1 rounded-lg border border-[#382b26] text-xs">
+              <button className="px-3 py-1 rounded-md bg-[#269f4d] text-white font-medium">
                 Gear
-              </span>
-              <span className="px-2.5 py-1 rounded bg-black/40 text-zinc-400 cursor-pointer">
+              </button>
+              <button className="px-3 py-1 rounded-md text-[#87796a] hover:text-[#e5e2de]">
                 Pets
-              </span>
-              <span className="px-2.5 py-1 rounded bg-black/40 text-zinc-400 cursor-pointer">
+              </button>
+              <button className="px-3 py-1 rounded-md text-[#87796a] hover:text-[#e5e2de]">
                 Stats
-              </span>
+              </button>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-            {["Diver's Mask", "Diver's Shirt", "Diver's Trunks", "Diver's Boots"].map((item) => (
+          {/* 4 Armor Pieces Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {[
+              { slot: 'helmet', name: "Diver's Mask", icon: '⛑️' },
+              { slot: 'chest', name: "Diver's Shirt", icon: '👕' },
+              { slot: 'legs', name: "Diver's Trunks", icon: '🛡️' },
+              { slot: 'boots', name: "Diver's Boots", icon: '🥾' },
+            ].map((item) => (
               <div
-                key={item}
-                className="bg-black/40 border border-emerald-900/60 rounded-lg p-3 space-y-1"
+                key={item.name}
+                className="bg-[#181310] border border-[#269f4d] rounded-xl p-3.5 flex flex-col justify-between min-h-[110px]"
               >
-                <div className="text-[11px] text-zinc-500">Armor</div>
-                <div className="font-semibold text-zinc-200">{item}</div>
-                <div className="text-[10px] text-emerald-400 font-mono">Wise · Growth V</div>
+                <div className="text-sm opacity-80">{item.icon}</div>
+                <div className="space-y-0.5">
+                  <div className="font-semibold text-xs text-[#e5e2de] leading-snug">
+                    {item.name}
+                  </div>
+                  <div className="text-[10px] text-[#87796a]">Wise · Growth V</div>
+                </div>
               </div>
             ))}
           </div>
 
-          <div className="grid grid-cols-2 gap-3 text-xs pt-2">
-            <div className="bg-black/40 border border-surface-border rounded-lg p-3">
-              <div className="text-[11px] text-zinc-500">Rod</div>
-              <div className="font-semibold text-zinc-200">Rod of the Sea</div>
-              <div className="text-[10px] text-emerald-400 font-mono">Expertise V · Salty</div>
+          {/* Rod & Pet Row */}
+          <div className="grid grid-cols-2 gap-3 pt-1">
+            <div className="bg-[#181310] border border-[#269f4d] rounded-xl p-3.5 flex flex-col justify-between min-h-[95px]">
+              <div className="text-sm opacity-80">🎣</div>
+              <div>
+                <div className="font-semibold text-xs text-[#e5e2de]">Rod of the Sea</div>
+                <div className="text-[10px] text-[#87796a]">Expertise V · Salty</div>
+              </div>
             </div>
-            <div className="bg-black/40 border border-surface-border rounded-lg p-3">
-              <div className="text-[11px] text-zinc-500">Active Pet</div>
-              <div className="font-semibold text-zinc-200">Dolphin</div>
-              <div className="text-[10px] text-emerald-400 font-mono">Level 80 · Epic</div>
+
+            <div className="bg-[#181310] border border-[#269f4d] rounded-xl p-3.5 flex flex-col justify-between min-h-[95px]">
+              <div className="text-sm opacity-80">🐬</div>
+              <div>
+                <div className="font-semibold text-xs text-[#e5e2de]">Dolphin</div>
+                <div className="text-[10px] text-[#87796a]">Level 80 · Epic</div>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Fishing Stats Card */}
-        <div className="bg-surface border border-surface-border rounded-xl p-6 space-y-4">
-          <div className="flex items-center justify-between border-b border-surface-border pb-3">
-            <h2 className="font-bold text-base text-zinc-100">Fishing Stats</h2>
-            <span className="text-xs text-zinc-500">With equipped gear</span>
+        <div className="bg-[#241c19] border border-[#382b26] rounded-2xl p-6 space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="font-bold text-base text-[#e5e2de]">Fishing stats</h2>
+            <span className="text-xs text-[#87796a]">With equipped gear</span>
           </div>
 
+          {/* Purse & Bank */}
           <div className="grid grid-cols-2 gap-3">
-            <div className="bg-black/40 border border-surface-border rounded-lg p-3.5">
-              <div className="text-xs text-zinc-500">Purse</div>
-              <div className="text-lg font-bold font-mono text-zinc-200 mt-1">
+            <div className="bg-[#181310] border border-[#382b26] rounded-xl p-3.5">
+              <div className="text-[11px] text-[#87796a]">Purse</div>
+              <div className="text-base font-bold font-mono text-[#e5e2de] mt-0.5">
                 {stats.purse.toLocaleString()}
               </div>
             </div>
-            <div className="bg-black/40 border border-surface-border rounded-lg p-3.5">
-              <div className="text-xs text-zinc-500">Bank</div>
-              <div className="text-lg font-bold font-mono text-zinc-200 mt-1">
+            <div className="bg-[#181310] border border-[#382b26] rounded-xl p-3.5">
+              <div className="text-[11px] text-[#87796a]">Bank</div>
+              <div className="text-base font-bold font-mono text-[#e5e2de] mt-0.5">
                 {stats.bank.toLocaleString()}
               </div>
             </div>
           </div>
 
+          {/* Big Stats: SCC & Fishing Speed */}
           <div className="grid grid-cols-2 gap-3">
-            <div className="bg-black/40 border border-surface-border rounded-lg p-4">
-              <div className="text-xs text-zinc-400">Sea Creature Chance</div>
-              <div className="text-3xl font-extrabold text-emerald-400 mt-1">{stats.scc}%</div>
-              <div className="text-[11px] text-zinc-500 mt-1">Chance to hook a sea creature</div>
+            <div className="bg-[#181310] border border-[#382b26] rounded-xl p-4 relative">
+              <span className="absolute right-3.5 top-3.5 text-[#269f4d] text-sm">🐟</span>
+              <div className="text-xs text-[#87796a]">Sea Creature Chance</div>
+              <div className="text-3xl font-extrabold text-[#269f4d] mt-1.5">
+                {stats.scc} <span className="text-lg font-bold">%</span>
+              </div>
+              <div className="text-[11px] text-[#87796a] mt-1">Chance to hook a sea creature</div>
             </div>
-            <div className="bg-black/40 border border-surface-border rounded-lg p-4">
-              <div className="text-xs text-zinc-400">Fishing Speed</div>
-              <div className="text-3xl font-extrabold text-amber-400 mt-1">
+
+            <div className="bg-[#181310] border border-[#382b26] rounded-xl p-4 relative">
+              <span className="absolute right-3.5 top-3.5 text-[#269f4d] text-sm">⏱️</span>
+              <div className="text-xs text-[#87796a]">Fishing Speed</div>
+              <div className="text-3xl font-extrabold text-[#269f4d] mt-1.5">
                 {stats.fishingSpeed}
               </div>
-              <div className="text-[11px] text-zinc-500 mt-1">Reduces time between catches</div>
+              <div className="text-[11px] text-[#87796a] mt-1">Reduces time between catches</div>
             </div>
           </div>
 
-          <div className="pt-2 flex justify-end">
-            <Link
-              to="/optimizer"
-              className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 flex items-center gap-1"
-            >
+          {/* Treasure Chance & Fishing Wisdom */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="bg-[#181310] border border-[#382b26] rounded-xl p-4 relative">
+              <span className="absolute right-3.5 top-3.5 text-amber-500/80 text-sm">💎</span>
+              <div className="text-xs text-[#87796a]">Treasure Chance</div>
+              <div className="text-2xl font-bold text-[#e5e2de] mt-1">
+                {stats.treasureChance} <span className="text-base font-semibold">%</span>
+              </div>
+              <div className="text-[11px] text-[#87796a] mt-0.5">
+                Chance to find fishing treasure
+              </div>
+            </div>
+
+            <div className="bg-[#181310] border border-[#382b26] rounded-xl p-4 relative">
+              <span className="absolute right-3.5 top-3.5 text-blue-400/80 text-sm">📖</span>
+              <div className="text-xs text-[#87796a]">Fishing Wisdom</div>
+              <div className="text-2xl font-bold text-[#e5e2de] mt-1">{stats.fishingWisdom}</div>
+              <div className="text-[11px] text-[#87796a] mt-0.5">
+                Boosts fishing experience earned
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Link */}
+          <div className="pt-2 flex items-center justify-between text-xs">
+            <span className="text-[#87796a]">Find the best value for your next upgrade.</span>
+            <Link to="/optimizer" className="text-[#269f4d] font-semibold hover:underline">
               Open optimizer →
             </Link>
           </div>
         </div>
       </div>
 
-      {/* Progress Bar */}
-      <div className="bg-surface border border-surface-border rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-        <div>
-          <span className="font-bold text-zinc-200">Fishing {stats.fishingLevel}</span>
-          <span className="text-zinc-500 ml-2">1,240 / 2,500 XP</span>
+      {/* Bottom Progress Bar */}
+      <div className="bg-[#241c19] border border-[#382b26] rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+        <div className="flex items-center gap-3">
+          <span className="text-base opacity-75">🎣</span>
+          <div>
+            <div className="font-bold text-[#e5e2de]">Fishing {stats.fishingLevel}</div>
+            <div className="text-[11px] text-[#87796a]">1,240 / 2,500 XP</div>
+          </div>
         </div>
-        <div className="flex items-center gap-3 w-full sm:w-1/2">
-          <div className="w-full bg-zinc-800 h-2 rounded-full overflow-hidden">
+
+        <div className="flex items-center gap-4 w-full sm:w-1/2">
+          <div className="w-full bg-[#181310] border border-[#382b26] h-2.5 rounded-full overflow-hidden">
             <div
-              className="bg-amber-500 h-full rounded-full"
+              className="bg-[#bd9853] h-full rounded-full"
               style={{ width: `${stats.progressPercent}%` }}
             />
           </div>
-          <span className="text-zinc-400 font-mono text-[11px] shrink-0">
-            {stats.progressPercent}% to lvl 48
+          <span className="text-[#87796a] font-mono text-[11px] shrink-0">
+            {stats.progressPercent}% to level 48
           </span>
         </div>
+      </div>
+
+      <div className="text-[11px] text-[#87796a] text-center pt-1">
+        Last synced just now · Stats reflect your selected profile and equipped items.
       </div>
     </div>
   );
