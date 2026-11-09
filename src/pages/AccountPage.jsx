@@ -1,8 +1,41 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 import { usePlayerStore } from '../store/usePlayerStore';
 import styles from './AccountPage.module.css';
 
 export default function AccountPage() {
-  const { username, setUsername } = usePlayerStore();
+  const { user, logout, isAuthenticated } = useAuth();
+  const { username, setUsername, savedBuilds, removeSavedBuild } = usePlayerStore();
+  const navigate = useNavigate();
+
+  const [inputNick, setInputNick] = useState(username);
+  const [saveSuccess, setSaveSuccess] = useState(false);
+
+  // Before vs After build selection
+  const [beforeBuildId, setBeforeBuildId] = useState(savedBuilds[0]?.id || '1');
+  const [afterBuildId, setAfterBuildId] = useState(savedBuilds[savedBuilds.length - 1]?.id || '2');
+
+  const beforeBuild = savedBuilds.find((b) => b.id === beforeBuildId) || savedBuilds[0] || {};
+  const afterBuild =
+    savedBuilds.find((b) => b.id === afterBuildId) || savedBuilds[savedBuilds.length - 1] || {};
+
+  const deltaSCC = (afterBuild.scc || 0) - (beforeBuild.scc || 0);
+  const deltaSpeed = (afterBuild.speed || 0) - (beforeBuild.speed || 0);
+  const deltaTreasure = (afterBuild.treasure || 12) - (beforeBuild.treasure || 12);
+  const deltaWisdom = (afterBuild.wisdom || 30) - (beforeBuild.wisdom || 30);
+
+  const handleSaveNick = (e) => {
+    e.preventDefault();
+    setUsername(inputNick);
+    setSaveSuccess(true);
+    setTimeout(() => setSaveSuccess(false), 2500);
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   return (
     <div className={styles.container}>
@@ -18,10 +51,10 @@ export default function AccountPage() {
         <div className={styles.card}>
           <div className={styles.cardHeader}>
             <h2 className={styles.cardTitle}>Account details</h2>
-            <span className={styles.badge}>Signed in</span>
+            <span className={styles.badge}>{isAuthenticated ? '● Signed in' : '○ Guest'}</span>
           </div>
 
-          <div className={styles.formFields}>
+          <form onSubmit={handleSaveNick} className={styles.formFields}>
             <div>
               <label className={styles.fieldLabel}>Email</label>
               <div className={styles.inputBox}>
@@ -29,7 +62,7 @@ export default function AccountPage() {
                 <input
                   type="text"
                   disabled
-                  value="angler@example.com"
+                  value={user?.email || 'angler@example.com'}
                   className={styles.inputDisabled}
                 />
               </div>
@@ -41,44 +74,60 @@ export default function AccountPage() {
                 <span className={styles.fieldIcon}>👤</span>
                 <input
                   type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  value={inputNick}
+                  onChange={(e) => setInputNick(e.target.value)}
                   className={styles.inputActive}
                 />
               </div>
             </div>
 
-            <button className={styles.saveBtn}>Save</button>
-          </div>
+            {saveSuccess && (
+              <div style={{ color: 'var(--color-gain)', fontSize: '0.75rem' }}>
+                ✓ Нікнейм оновлено!
+              </div>
+            )}
+
+            <button type="submit" className={styles.saveBtn}>
+              Save
+            </button>
+            <button type="button" onClick={handleLogout} className={styles.logoutBtn}>
+              Log out
+            </button>
+          </form>
         </div>
 
         {/* Saved Builds */}
         <div className={styles.card}>
           <div className={styles.cardHeader}>
             <h2 className={styles.cardTitle}>Saved builds</h2>
-            <span className={styles.badgeMuted}>2 saved builds</span>
+            <span className={styles.badgeMuted}>{savedBuilds.length} saved builds</span>
           </div>
 
           <div className={styles.buildsList}>
-            {/* Build 1 */}
-            <div className={styles.buildCard}>
-              <div className={styles.buildTitleRow}>
-                <span>🔖</span>
-                <span className={styles.buildName}>Everyday fishing</span>
+            {savedBuilds.map((build) => (
+              <div key={build.id} className={styles.buildCard}>
+                <div className={styles.buildTitleRow}>
+                  <span>🔖</span>
+                  <span className={styles.buildName}>{build.name}</span>
+                  {savedBuilds.length > 1 && (
+                    <button
+                      type="button"
+                      title="Видалити білд"
+                      onClick={() => removeSavedBuild(build.id)}
+                      className={styles.deleteBtn}
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
+                <div className={styles.buildMeta}>
+                  {build.meta || `${build.scc}% SCC · ${build.speed} speed`}
+                </div>
+                <div className={styles.buildStats}>
+                  {build.scc}% SCC &nbsp;&nbsp; {build.speed} speed
+                </div>
               </div>
-              <div className={styles.buildMeta}>Current equipment · Lime</div>
-              <div className={styles.buildStats}>64% SCC &nbsp;&nbsp; 180 speed</div>
-            </div>
-
-            {/* Build 2 */}
-            <div className={styles.buildCard}>
-              <div className={styles.buildTitleRow}>
-                <span>🔖</span>
-                <span className={styles.buildName}>SCC · 5M plan</span>
-              </div>
-              <div className={styles.buildMeta}>3 upgrades · 4,000,000 coins</div>
-              <div className={styles.buildStats}>70% SCC &nbsp;&nbsp; 180 speed</div>
-            </div>
+            ))}
           </div>
 
           <div className={styles.footerNotice}>
@@ -91,25 +140,39 @@ export default function AccountPage() {
       <div className={styles.compareCard}>
         <div className={styles.cardHeader}>
           <h2 className={styles.cardTitle}>Compare builds</h2>
-          <span className={styles.badgeMuted}>Before vs After</span>
+          <span className={styles.badgeMuted}>Before vs After (Dynamic Analysis)</span>
         </div>
 
         <div className={styles.compareGrid}>
           {/* Selectors Column */}
           <div className={styles.selectorCol}>
             <div>
-              <div className={styles.fieldLabel}>Before</div>
-              <div className={styles.dropdownBox}>
-                <span>Everyday fishing</span>
-                <span>▾</span>
-              </div>
+              <label className={styles.fieldLabel}>Before</label>
+              <select
+                value={beforeBuildId}
+                onChange={(e) => setBeforeBuildId(e.target.value)}
+                className={styles.selectBox}
+              >
+                {savedBuilds.map((b) => (
+                  <option key={b.id} value={b.id}>
+                    {b.name}
+                  </option>
+                ))}
+              </select>
             </div>
             <div>
-              <div className={styles.fieldLabel}>After</div>
-              <div className={styles.dropdownBox}>
-                <span>SCC · 5M plan</span>
-                <span>▾</span>
-              </div>
+              <label className={styles.fieldLabel}>After</label>
+              <select
+                value={afterBuildId}
+                onChange={(e) => setAfterBuildId(e.target.value)}
+                className={styles.selectBox}
+              >
+                {savedBuilds.map((b) => (
+                  <option key={b.id} value={b.id}>
+                    {b.name}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 
@@ -118,13 +181,15 @@ export default function AccountPage() {
             <div className={styles.metricLabel}>Sea Creature Chance</div>
             <div className={styles.metricValues}>
               <div className={styles.metricRow}>
-                64% <span className={styles.metricRowSub}>Before</span>
+                {beforeBuild.scc || 0}% <span className={styles.metricRowSub}>Before</span>
               </div>
               <div className={styles.metricRow}>
-                70% <span className={styles.metricRowSub}>After</span>
+                {afterBuild.scc || 0}% <span className={styles.metricRowSub}>After</span>
               </div>
             </div>
-            <div className={styles.deltaGain}>+6 pp</div>
+            <div className={deltaSCC > 0 ? styles.deltaGain : styles.deltaNone}>
+              {deltaSCC > 0 ? `+${deltaSCC} pp` : deltaSCC === 0 ? 'No change' : `${deltaSCC} pp`}
+            </div>
           </div>
 
           {/* Metric 2: Speed */}
@@ -132,13 +197,15 @@ export default function AccountPage() {
             <div className={styles.metricLabel}>Fishing Speed</div>
             <div className={styles.metricValues}>
               <div className={styles.metricRowAccent}>
-                180 <span className={styles.metricRowSub}>Before</span>
+                {beforeBuild.speed || 0} <span className={styles.metricRowSub}>Before</span>
               </div>
               <div className={styles.metricRowAccent}>
-                180 <span className={styles.metricRowSub}>After</span>
+                {afterBuild.speed || 0} <span className={styles.metricRowSub}>After</span>
               </div>
             </div>
-            <div className={styles.deltaNone}>No change</div>
+            <div className={deltaSpeed > 0 ? styles.deltaGain : styles.deltaNone}>
+              {deltaSpeed > 0 ? `+${deltaSpeed}` : deltaSpeed === 0 ? 'No change' : `${deltaSpeed}`}
+            </div>
           </div>
 
           {/* Metric 3: Treasure */}
@@ -146,13 +213,15 @@ export default function AccountPage() {
             <div className={styles.metricLabel}>Treasure Chance</div>
             <div className={styles.metricValues}>
               <div className={styles.metricRow}>
-                12% <span className={styles.metricRowSub}>Before</span>
+                {beforeBuild.treasure || 12}% <span className={styles.metricRowSub}>Before</span>
               </div>
               <div className={styles.metricRow}>
-                12% <span className={styles.metricRowSub}>After</span>
+                {afterBuild.treasure || 12}% <span className={styles.metricRowSub}>After</span>
               </div>
             </div>
-            <div className={styles.deltaNone}>No change</div>
+            <div className={deltaTreasure > 0 ? styles.deltaGain : styles.deltaNone}>
+              {deltaTreasure > 0 ? `+${deltaTreasure}%` : 'No change'}
+            </div>
           </div>
 
           {/* Metric 4: Wisdom */}
@@ -160,13 +229,15 @@ export default function AccountPage() {
             <div className={styles.metricLabel}>Fishing Wisdom</div>
             <div className={styles.metricValues}>
               <div className={styles.metricRow}>
-                30 <span className={styles.metricRowSub}>Before</span>
+                {beforeBuild.wisdom || 30} <span className={styles.metricRowSub}>Before</span>
               </div>
               <div className={styles.metricRow}>
-                30 <span className={styles.metricRowSub}>After</span>
+                {afterBuild.wisdom || 30} <span className={styles.metricRowSub}>After</span>
               </div>
             </div>
-            <div className={styles.deltaNone}>No change</div>
+            <div className={deltaWisdom > 0 ? styles.deltaGain : styles.deltaNone}>
+              {deltaWisdom > 0 ? `+${deltaWisdom}` : 'No change'}
+            </div>
           </div>
         </div>
       </div>

@@ -1,69 +1,34 @@
 import { useState } from 'react';
+import { useOptimizer } from '../hooks/useOptimizer';
 import { usePlayerStore } from '../store/usePlayerStore';
 import styles from './OptimizerPage.module.css';
 
 export default function OptimizerPage() {
-  const { targetStat, setTargetStat, budget, setBudget, addSavedBuild, username, profile } =
-    usePlayerStore();
-  const [selectedFilters, setSelectedFilters] = useState([
-    'Enchantments',
-    'Armor',
-    'Reforges',
-    'Pet',
-    'Accessory',
-  ]);
+  const { username, profile } = usePlayerStore();
+  const {
+    rankedUpgrades,
+    budgetAllocation,
+    selectedFilters,
+    toggleFilter,
+    targetStat,
+    setTargetStat,
+    budget,
+    setBudget,
+    saveCurrentBuild,
+  } = useOptimizer();
 
-  const upgrades = [
-    {
-      name: 'Angler V',
-      note: 'Apply to fishing rod',
-      type: 'Enchantment',
-      gain: '+1 pp SCC',
-      price: 400000,
-      costPerStat: '400,000',
-    },
-    {
-      name: 'Submerged',
-      note: 'Reforge one armor piece',
-      type: 'Reforge',
-      gain: '+2 pp SCC',
-      price: 1200000,
-      costPerStat: '600,000',
-    },
-    {
-      name: 'Deep Sea Orb',
-      note: 'Accessory',
-      type: 'Accessory',
-      gain: '+3 pp SCC',
-      price: 2400000,
-      costPerStat: '800,000',
-    },
-    {
-      name: 'Shark Scale set',
-      note: "Replace Diver's armor",
-      type: 'Armor',
-      gain: '+4 pp SCC',
-      price: 4000000,
-      costPerStat: '1,000,000',
-    },
-    {
-      name: 'Ammonite',
-      note: 'Level 100 · Replace Dolphin',
-      type: 'Pet',
-      gain: '+5 pp SCC',
-      price: 7500000,
-      costPerStat: '1,500,000',
-    },
-  ];
+  const [inputBudget, setInputBudget] = useState(budget);
+  const [saveMessage, setSaveMessage] = useState('');
 
-  const handleSaveBuild = () => {
-    addSavedBuild({
-      id: Date.now().toString(),
-      name: `SCC · 5M plan`,
-      scc: 70,
-      speed: 180,
-    });
-    alert('Build saved to your account!');
+  const handleCalculate = (e) => {
+    e.preventDefault();
+    setBudget(Number(inputBudget) || 0);
+  };
+
+  const handleSave = () => {
+    const planName = saveCurrentBuild();
+    setSaveMessage(`✓ Збережено: "${planName}" у вашому кабінеті!`);
+    setTimeout(() => setSaveMessage(''), 3000);
   };
 
   return (
@@ -87,6 +52,7 @@ export default function OptimizerPage() {
           {['SCC', 'Fishing Speed', 'Mixed'].map((stat) => (
             <button
               key={stat}
+              type="button"
               onClick={() => setTargetStat(stat)}
               className={targetStat === stat ? styles.statBtnActive : styles.statBtn}
             >
@@ -102,11 +68,8 @@ export default function OptimizerPage() {
             return (
               <button
                 key={filter}
-                onClick={() =>
-                  setSelectedFilters((prev) =>
-                    isSelected ? prev.filter((f) => f !== filter) : [...prev, filter]
-                  )
-                }
+                type="button"
+                onClick={() => toggleFilter(filter)}
                 className={isSelected ? styles.filterChipActive : styles.filterChip}
               >
                 {isSelected && <span>✓ </span>}
@@ -125,11 +88,9 @@ export default function OptimizerPage() {
             <div className={styles.tableHeader}>
               <div>
                 <h2 className={styles.cardHeading}>Recommended upgrades</h2>
-                <p className={styles.cardSub}>
-                  Sorted by lowest cost per +1 percentage point of SCC.
-                </p>
+                <p className={styles.cardSub}>Sorted by lowest cost per +1 unit of {targetStat}.</p>
               </div>
-              <span className={styles.countBadge}>{upgrades.length} upgrades</span>
+              <span className={styles.countBadge}>{rankedUpgrades.length} upgrades</span>
             </div>
 
             <div className={styles.tableWrap}>
@@ -144,14 +105,14 @@ export default function OptimizerPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {upgrades.map((u) => (
-                    <tr key={u.name} className={styles.tr}>
+                  {rankedUpgrades.map((u) => (
+                    <tr key={u.id || u.name} className={styles.tr}>
                       <td className={styles.td}>
                         <div className={styles.upgradeName}>{u.name}</div>
                         <div className={styles.upgradeNote}>{u.note}</div>
                       </td>
                       <td className={`${styles.td} ${styles.typeText}`}>{u.type}</td>
-                      <td className={`${styles.td} ${styles.gainVal}`}>{u.gain}</td>
+                      <td className={`${styles.td} ${styles.gainVal}`}>{u.displayGain}</td>
                       <td className={`${styles.td} ${styles.priceVal}`}>
                         {u.price.toLocaleString()}
                       </td>
@@ -160,6 +121,17 @@ export default function OptimizerPage() {
                       </td>
                     </tr>
                   ))}
+                  {rankedUpgrades.length === 0 && (
+                    <tr>
+                      <td
+                        colSpan={5}
+                        className={styles.td}
+                        style={{ textAlign: 'center', padding: '2rem' }}
+                      >
+                        Немає оновлень за вибраними фільтрами.
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
@@ -175,52 +147,70 @@ export default function OptimizerPage() {
         <div className={styles.calcCard}>
           <h2 className={styles.cardHeading}>Budget calculator</h2>
 
-          <div className={styles.calcField}>
+          <form onSubmit={handleCalculate} className={styles.calcField}>
             <label className={styles.calcLabel}>Your budget</label>
             <div className={styles.inputBox}>
               <input
                 type="number"
-                value={budget}
-                onChange={(e) => setBudget(Number(e.target.value))}
+                value={inputBudget}
+                onChange={(e) => setInputBudget(e.target.value)}
                 className={styles.numInput}
+                min={0}
+                step={50000}
               />
               <span className={styles.currencyText}>coins</span>
             </div>
-            <button className={styles.calcBtn}>Calculate</button>
-          </div>
+            <button type="submit" className={styles.calcBtn}>
+              Calculate
+            </button>
+          </form>
 
           <div className={styles.purchasesSection}>
-            <div className={styles.sectionLabel}>Recommended purchases</div>
-            <div className={styles.rowBetween}>
-              <span>Angler V</span> <span className={styles.priceVal}>400,000</span>
+            <div className={styles.sectionLabel}>
+              Recommended purchases ({budgetAllocation.selectedItems.length})
             </div>
-            <div className={styles.rowBetween}>
-              <span>Submerged</span> <span className={styles.priceVal}>1,200,000</span>
-            </div>
-            <div className={styles.rowBetween}>
-              <span>Deep Sea Orb</span> <span className={styles.priceVal}>2,400,000</span>
-            </div>
+            {budgetAllocation.selectedItems.map((item) => (
+              <div key={item.id || item.name} className={styles.rowBetween}>
+                <span>{item.name}</span>
+                <span className={styles.priceVal}>{item.cost.toLocaleString()}</span>
+              </div>
+            ))}
+            {budgetAllocation.selectedItems.length === 0 && (
+              <div className={styles.mutedText}>
+                Бюджет занадто малий для рекомендованих покупок.
+              </div>
+            )}
           </div>
 
           <div className={styles.totalsSection}>
             <div className={styles.rowBetween}>
               <span className={styles.mutedText}>Total cost</span>
-              <span className={styles.monoText}>4,000,000</span>
+              <span className={styles.monoText}>{budgetAllocation.totalCost.toLocaleString()}</span>
             </div>
             <div className={styles.rowBetween}>
               <span className={styles.mutedText}>Remaining budget</span>
-              <span className={styles.monoText}>1,000,000</span>
+              <span className={styles.monoText}>
+                {budgetAllocation.remainingBudget.toLocaleString()}
+              </span>
             </div>
             <div className={styles.projectedBox}>
               <div className={styles.projectedLabel}>Projected Sea Creature Chance</div>
               <div className={styles.projectedValues}>
-                <span className={styles.projectedNumbers}>64% → 70%</span>
-                <span className={styles.gainVal}>+6 pp</span>
+                <span className={styles.projectedNumbers}>
+                  {budgetAllocation.currentSCC}% → {budgetAllocation.projectedSCC}%
+                </span>
+                <span className={styles.gainVal}>+{budgetAllocation.totalGain} pp</span>
               </div>
             </div>
           </div>
 
-          <button onClick={handleSaveBuild} className={styles.saveBuildBtn}>
+          {saveMessage && (
+            <div style={{ color: 'var(--color-gain)', fontSize: '0.75rem', textAlign: 'center' }}>
+              {saveMessage}
+            </div>
+          )}
+
+          <button type="button" onClick={handleSave} className={styles.saveBuildBtn}>
             Save build
           </button>
         </div>

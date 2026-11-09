@@ -272,3 +272,51 @@
   font-size: 0.75rem;
   color: var(--text-muted);
 }
+
+.selectBox {
+  width: 100%;
+  background-color: var(--bg-card-sub);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  color: var(--text-main);
+  font-family: inherit;
+  font-size: 0.75rem;
+  outline: none;
+  cursor: pointer;
+}
+
+.selectBox:focus {
+  border-color: var(--color-accent);
+}
+
+.deleteBtn {
+  margin-left: auto;
+  opacity: 0.6;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.deleteBtn:hover {
+  opacity: 1;
+}
+
+.logoutBtn {
+  width: 100%;
+  padding: 0.5rem;
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  border-radius: 0.5rem;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
+  cursor: pointer;
+}
+
+.logoutBtn:hover {
+  color: #f87171;
+  border-color: #f87171;
+}

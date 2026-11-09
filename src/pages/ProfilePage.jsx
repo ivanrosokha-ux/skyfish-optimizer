@@ -1,36 +1,60 @@
 import { useEffect, useState } from 'react';
-import { usePlayerStore } from '../store/usePlayerStore';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { usePlayerProfile } from '../hooks/usePlayerProfile';
+import { usePlayerStore } from '../store/usePlayerStore';
 import styles from './ProfilePage.module.css';
 
 export default function ProfilePage() {
   const { player } = useParams();
   const navigate = useNavigate();
-  const { username, profile, stats, setUsername } = usePlayerStore();
-  const [searchInput, setSearchInput] = useState(player || username);
+  const { stats } = usePlayerStore();
+  const { profileData, loading, currentUsername, currentProfile, changeProfile, searchNickname } =
+    usePlayerProfile(player || 'ReefRunner', 'Lime');
+
+  const [searchInput, setSearchInput] = useState(player || currentUsername);
 
   useEffect(() => {
-    if (player && player !== username) {
-      setUsername(player);
+    if (player && player !== currentUsername) {
+      searchNickname(player);
       setSearchInput(player);
     }
-  }, [player, username, setUsername]);
+  }, [player, currentUsername, searchNickname]);
 
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchInput.trim()) {
-      setUsername(searchInput.trim());
+      searchNickname(searchInput.trim());
       navigate(`/profile/${encodeURIComponent(searchInput.trim())}`);
     }
   };
+
+  const armorItems = profileData?.armor || [
+    { slot: 'helmet', name: "Diver's Mask", meta: 'Wise · Growth V', icon: '⛑️' },
+    { slot: 'chest', name: "Diver's Shirt", meta: 'Wise · Growth V', icon: '👕' },
+    { slot: 'legs', name: "Diver's Trunks", meta: 'Wise · Growth V', icon: '🛡️' },
+    { slot: 'boots', name: "Diver's Boots", meta: 'Wise · Growth V', icon: '🥾' },
+  ];
+
+  const rodItem = profileData?.rod || {
+    name: 'Rod of the Sea',
+    meta: 'Expertise V · Salty',
+    icon: '🎣',
+  };
+  const petItem = profileData?.pet || {
+    name: 'Dolphin',
+    meta: 'Level 80 · Epic',
+    icon: '🐬',
+  };
+  const profilesList = profileData?.profilesList || ['Lime', 'Coconut', 'Papaya'];
 
   return (
     <div className={styles.container}>
       {/* Title */}
       <div>
         <h1 className={styles.title}>
-          Fishing stats for <span className={styles.accent}>{username}</span> on{' '}
-          <span className={styles.accent}>{profile}</span>
+          Fishing stats for <span className={styles.accent}>{currentUsername}</span> on{' '}
+          <span className={styles.accent}>{currentProfile}</span>
+          {loading && <span className={styles.cardSubtitle}> (Оновлення...)</span>}
         </h1>
         <p className={styles.subtitle}>Your gear, your stats. A clearer path to your next catch.</p>
       </div>
@@ -59,11 +83,17 @@ export default function ProfilePage() {
         {/* Profiles pills */}
         <div className={styles.pillsRow}>
           <span className={styles.pillsLabel}>Profiles</span>
-          <button className={styles.pillActive}>
-            <span>✓</span> Lime
-          </button>
-          <button className={styles.pill}>Coconut</button>
-          <button className={styles.pill}>Papaya</button>
+          {profilesList.map((prof) => (
+            <button
+              key={prof}
+              type="button"
+              onClick={() => changeProfile(prof)}
+              className={prof === currentProfile ? styles.pillActive : styles.pill}
+            >
+              {prof === currentProfile && <span>✓ </span>}
+              {prof}
+            </button>
+          ))}
         </div>
       </div>
 
@@ -82,17 +112,12 @@ export default function ProfilePage() {
 
           {/* 4 Armor Pieces Grid */}
           <div className={styles.armorGrid}>
-            {[
-              { slot: 'helmet', name: "Diver's Mask", icon: '⛑️' },
-              { slot: 'chest', name: "Diver's Shirt", icon: '👕' },
-              { slot: 'legs', name: "Diver's Trunks", icon: '🛡️' },
-              { slot: 'boots', name: "Diver's Boots", icon: '🥾' },
-            ].map((item) => (
-              <div key={item.name} className={styles.armorItem}>
+            {armorItems.map((item) => (
+              <div key={item.slot || item.name} className={styles.armorItem}>
                 <div className={styles.armorIcon}>{item.icon}</div>
                 <div>
                   <div className={styles.armorName}>{item.name}</div>
-                  <div className={styles.armorMeta}>Wise · Growth V</div>
+                  <div className={styles.armorMeta}>{item.meta}</div>
                 </div>
               </div>
             ))}
@@ -101,18 +126,18 @@ export default function ProfilePage() {
           {/* Rod & Pet Row */}
           <div className={styles.weaponGrid}>
             <div className={styles.weaponItem}>
-              <div className={styles.armorIcon}>🎣</div>
+              <div className={styles.armorIcon}>{rodItem.icon}</div>
               <div>
-                <div className={styles.armorName}>Rod of the Sea</div>
-                <div className={styles.armorMeta}>Expertise V · Salty</div>
+                <div className={styles.armorName}>{rodItem.name}</div>
+                <div className={styles.armorMeta}>{rodItem.meta}</div>
               </div>
             </div>
 
             <div className={styles.weaponItem}>
-              <div className={styles.armorIcon}>🐬</div>
+              <div className={styles.armorIcon}>{petItem.icon}</div>
               <div>
-                <div className={styles.armorName}>Dolphin</div>
-                <div className={styles.armorMeta}>Level 80 · Epic</div>
+                <div className={styles.armorName}>{petItem.name}</div>
+                <div className={styles.armorMeta}>{petItem.meta}</div>
               </div>
             </div>
           </div>
@@ -129,11 +154,11 @@ export default function ProfilePage() {
           <div className={styles.stats2Col}>
             <div className={styles.statBox}>
               <div className={styles.statLabel}>Purse</div>
-              <div className={styles.statValueMono}>{stats.purse.toLocaleString()}</div>
+              <div className={styles.statValueMono}>{(stats.purse || 0).toLocaleString()}</div>
             </div>
             <div className={styles.statBox}>
               <div className={styles.statLabel}>Bank</div>
-              <div className={styles.statValueMono}>{stats.bank.toLocaleString()}</div>
+              <div className={styles.statValueMono}>{(stats.bank || 0).toLocaleString()}</div>
             </div>
           </div>
 
@@ -143,7 +168,7 @@ export default function ProfilePage() {
               <span className={`${styles.bigStatIcon} ${styles.gainColor}`}>🐟</span>
               <div className={styles.bigStatTitle}>Sea Creature Chance</div>
               <div className={`${styles.bigStatValue} ${styles.gainColor}`}>
-                {stats.scc} <span className={styles.bigStatUnit}>%</span>
+                {stats.scc || 64} <span className={styles.bigStatUnit}>%</span>
               </div>
               <div className={styles.bigStatDesc}>Chance to hook a sea creature</div>
             </div>
@@ -152,7 +177,7 @@ export default function ProfilePage() {
               <span className={`${styles.bigStatIcon} ${styles.accentColor}`}>⏱️</span>
               <div className={styles.bigStatTitle}>Fishing Speed</div>
               <div className={`${styles.bigStatValue} ${styles.accentColor}`}>
-                {stats.fishingSpeed}
+                {stats.fishingSpeed || 180}
               </div>
               <div className={styles.bigStatDesc}>Reduces time between catches</div>
             </div>
@@ -164,7 +189,7 @@ export default function ProfilePage() {
               <span className={`${styles.bigStatIcon} ${styles.goldColor}`}>💎</span>
               <div className={styles.bigStatTitle}>Treasure Chance</div>
               <div className={styles.bigStatValue}>
-                {stats.treasureChance} <span className={styles.bigStatUnit}>%</span>
+                {stats.treasureChance || 12} <span className={styles.bigStatUnit}>%</span>
               </div>
               <div className={styles.bigStatDesc}>Chance to find fishing treasure</div>
             </div>
@@ -172,7 +197,7 @@ export default function ProfilePage() {
             <div className={styles.bigStatBox}>
               <span className={styles.bigStatIcon}>📖</span>
               <div className={styles.bigStatTitle}>Fishing Wisdom</div>
-              <div className={styles.bigStatValue}>{stats.fishingWisdom}</div>
+              <div className={styles.bigStatValue}>{stats.fishingWisdom || 30}</div>
               <div className={styles.bigStatDesc}>Boosts fishing experience earned</div>
             </div>
           </div>
@@ -192,7 +217,7 @@ export default function ProfilePage() {
         <div className={styles.progressInfo}>
           <span className={styles.progressIcon}>🎣</span>
           <div>
-            <div className={styles.levelText}>Fishing {stats.fishingLevel}</div>
+            <div className={styles.levelText}>Fishing {stats.fishingLevel || 47}</div>
             <div className={styles.levelXp}>1,240 / 2,500 XP</div>
           </div>
         </div>
@@ -201,10 +226,12 @@ export default function ProfilePage() {
           <div className={styles.progressBarTrack}>
             <div
               className={styles.progressBarFill}
-              style={{ width: `${stats.progressPercent}%` }}
+              style={{ width: `${stats.progressPercent || 50}%` }}
             />
           </div>
-          <span className={styles.progressPercentText}>{stats.progressPercent}% to level 48</span>
+          <span className={styles.progressPercentText}>
+            {stats.progressPercent || 50}% to level 48
+          </span>
         </div>
       </div>
 
