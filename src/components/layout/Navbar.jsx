@@ -10,10 +10,10 @@ export default function Navbar() {
   ];
 
   return (
-    <header className="border-b border-[#28211d] bg-[#181310] px-8 py-5 flex items-center justify-between">
+    <header className="border-b border-[#3A2F29] bg-[#1A1411] px-8 py-5 flex items-center justify-between">
       <Link
         to="/"
-        className="text-xl font-bold tracking-tight text-[#e5e2de] hover:text-white transition"
+        className="text-xl font-bold tracking-tight text-[#F5F1EC] hover:text-white transition"
       >
         SkyFish
       </Link>
@@ -27,8 +27,8 @@ export default function Navbar() {
               to={link.path}
               className={`relative py-1 transition-colors ${
                 isActive
-                  ? 'text-[#269f4d] font-semibold after:absolute after:bottom-[-20px] after:left-0 after:right-0 after:h-[2px] after:bg-[#269f4d]'
-                  : 'text-[#87796a] hover:text-[#e5e2de]'
+                  ? 'text-[#1FA64A] font-semibold after:absolute after:bottom-[-20px] after:left-0 after:right-0 after:h-[2px] after:bg-[#1FA64A]'
+                  : 'text-[#A39A92] hover:text-[#F5F1EC]'
               }`}
             >
               {link.label}
