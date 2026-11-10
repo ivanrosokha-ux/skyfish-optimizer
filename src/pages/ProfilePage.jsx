@@ -1067,7 +1067,7 @@ export default function ProfilePage() {
                     />
                     <span className={styles.statLabel}>Sea Creature Chance</span>
                   </div>
-                  <span className={`${styles.statSymbolBadge} ${styles.badgeSCC}`}>α</span>
+                  <span className={`${styles.statSymbolBadge} ${styles.badgeSCC}`}> α</span>
                 </div>
                 <div className={`${styles.statValue} ${styles.statValueSCC}`}>
                   {currentSCC} <span className={styles.statUnit}>%</span>
@@ -1085,7 +1085,7 @@ export default function ProfilePage() {
                     />
                     <span className={styles.statLabel}>Fishing Speed</span>
                   </div>
-                  <span className={`${styles.statSymbolBadge} ${styles.badgeSpeed}`}>⛯</span>
+                  <span className={`${styles.statSymbolBadge} ${styles.badgeSpeed}`}> ⛯</span>
                 </div>
                 <div className={`${styles.statValue} ${styles.statValueSpeed}`}>{currentSpeed}</div>
                 <span className={styles.statNote}>Active rod + gear bonus</span>
@@ -1101,7 +1101,7 @@ export default function ProfilePage() {
                     />
                     <span className={styles.statLabel}>Treasure Chance</span>
                   </div>
-                  <span className={`${styles.statSymbolBadge} ${styles.badgeTreasure}`}>☘</span>
+                  <span className={`${styles.statSymbolBadge} ${styles.badgeTreasure}`}> ☘</span>
                 </div>
                 <div className={`${styles.statValue} ${styles.statValueTreasure}`}>
                   {currentTreasure} <span className={styles.statUnit}>%</span>

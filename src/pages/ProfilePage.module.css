@@ -1486,8 +1486,8 @@
 }
 
 .statSymbolBadge {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-family: var(--font-skyblock);
+  font-size: 0.8125rem;
   font-weight: 800;
   padding: 0.15rem 0.45rem;
   border-radius: 0.375rem;

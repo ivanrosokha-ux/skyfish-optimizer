@@ -1,5 +1,14 @@
 @import './styles/variables.css';
 
+@font-face {
+  font-family: 'Hypixel SkyBlock';
+  font-style: normal;
+  font-weight: normal;
+  font-display: swap;
+  src: url('/fonts/Hypixel-SkyBlock.woff2') format('woff2');
+  unicode-range: U+12DE, U+2714, U+2716, U+E000-EFFF;
+}
+
 *,
 *::before,
 *::after {
