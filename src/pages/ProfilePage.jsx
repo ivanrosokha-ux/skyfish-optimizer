@@ -329,7 +329,7 @@ export default function ProfilePage() {
     {
       key: 'fishing',
       name: 'Fishing',
-      icon: '🎣',
+      icon: '/assets/minecraft/icons/rod.png',
       level: fishingLevel,
       progressPercent: stats.progressPercent || 24,
       totalProgressPercent: 81,
@@ -341,7 +341,7 @@ export default function ProfilePage() {
     {
       key: 'mining',
       name: 'Mining',
-      icon: '⛏️',
+      icon: '/assets/minecraft/icons/diamond_pickaxe.png',
       level: 60,
       progressPercent: 100,
       totalProgressPercent: 100,
@@ -351,7 +351,7 @@ export default function ProfilePage() {
     {
       key: 'farming',
       name: 'Farming',
-      icon: '🌾',
+      icon: '/assets/minecraft/icons/golden_hoe.png',
       level: 50,
       progressPercent: 42,
       totalProgressPercent: 42,
@@ -361,7 +361,7 @@ export default function ProfilePage() {
     {
       key: 'combat',
       name: 'Combat',
-      icon: '⚔️',
+      icon: '/assets/minecraft/icons/diamond_sword.png',
       level: 59,
       progressPercent: 61,
       totalProgressPercent: 96,
@@ -371,7 +371,7 @@ export default function ProfilePage() {
     {
       key: 'enchanting',
       name: 'Enchanting',
-      icon: '🔮',
+      icon: '/assets/minecraft/icons/enchanted_book.png',
       level: 60,
       progressPercent: 100,
       totalProgressPercent: 100,
@@ -381,7 +381,7 @@ export default function ProfilePage() {
     {
       key: 'taming',
       name: 'Taming',
-      icon: '🦴',
+      icon: '/assets/minecraft/icons/bone.png',
       level: 50,
       progressPercent: 100,
       totalProgressPercent: 100,
@@ -391,7 +391,7 @@ export default function ProfilePage() {
     {
       key: 'alchemy',
       name: 'Alchemy',
-      icon: '⚗️',
+      icon: '/assets/minecraft/icons/brewing_stand.png',
       level: 50,
       progressPercent: 100,
       totalProgressPercent: 100,
@@ -401,7 +401,7 @@ export default function ProfilePage() {
     {
       key: 'foraging',
       name: 'Foraging',
-      icon: '🪓',
+      icon: '/assets/minecraft/icons/diamond_axe.png',
       level: 45,
       progressPercent: 70,
       totalProgressPercent: 70,
@@ -427,7 +427,12 @@ export default function ProfilePage() {
         <p className={styles.subtitle}>Your gear, your stats. A clearer path to your next catch.</p>
       </div>
 
-      {error && <div className={styles.errorBanner}>⚠️ {error}</div>}
+      {error && (
+        <div className={styles.errorBanner}>
+          <span className={styles.errorDot}>!</span>
+          <span>{error}</span>
+        </div>
+      )}
 
       {/* SkyCrypt-Styled Player Banner */}
       <div className={styles.skycryptBanner}>
@@ -444,7 +449,7 @@ export default function ProfilePage() {
             <span className={styles.bannerIgn}>{currentUsername}</span>
             <span className={styles.rankBadge}>VIP+</span>
             <span className={styles.profileBadge}>
-              <span>📁</span> {currentProfile}
+              <span className={styles.profileBadgeDot}>●</span> {currentProfile}
             </span>
             {profileData?.source && (
               <span className={styles.sourceBadge}>● {profileData.source}</span>
@@ -452,15 +457,27 @@ export default function ProfilePage() {
           </div>
           <div className={styles.bannerMetaRow}>
             <div className={styles.currencyChip}>
-              <span>💰</span>
+              <img
+                src="/assets/minecraft/icons/coin.png"
+                alt="Purse"
+                className={styles.chipPixelIcon}
+              />
               <span>Purse: {(profileData?.stats?.purse ?? stats.purse ?? 0).toLocaleString()}</span>
             </div>
             <div className={`${styles.currencyChip} ${styles.currencyChipGold}`}>
-              <span>🏦</span>
+              <img
+                src="/assets/minecraft/icons/bank.png"
+                alt="Bank"
+                className={styles.chipPixelIcon}
+              />
               <span>Bank: {(profileData?.stats?.bank ?? stats.bank ?? 0).toLocaleString()}</span>
             </div>
             <div className={styles.currencyChip}>
-              <span>🎣</span>
+              <img
+                src="/assets/minecraft/icons/rod.png"
+                alt="Fishing"
+                className={styles.chipPixelIcon}
+              />
               <span>
                 Fishing {fishingLevel} (
                 {featuredFishing.totalProgressPercent || stats.progressPercent || 50}%)
@@ -476,7 +493,13 @@ export default function ProfilePage() {
           <label className={styles.searchLabel}>Minecraft nickname</label>
           <div className={styles.searchBar}>
             <div className={styles.inputWrapper}>
-              <span className={styles.inputIcon}>🔍</span>
+              <svg className={styles.inputIconSvg} viewBox="0 0 20 20" fill="currentColor">
+                <path
+                  fillRule="evenodd"
+                  d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                  clipRule="evenodd"
+                />
+              </svg>
               <input
                 type="text"
                 value={searchInput}
@@ -515,28 +538,36 @@ export default function ProfilePage() {
           onClick={() => handleTabChange('gear')}
           className={activeGearTab === 'gear' ? styles.navTabBtnActive : styles.navTabBtn}
         >
-          ⚔️ Equipment & Gear
+          <img
+            src="/assets/minecraft/diamond_chestplate.png"
+            alt=""
+            className={styles.tabPixelIcon}
+          />
+          <span>Equipment & Gear</span>
         </button>
         <button
           type="button"
           onClick={() => handleTabChange('skills')}
           className={activeGearTab === 'skills' ? styles.navTabBtnActive : styles.navTabBtn}
         >
-          🎣 Skills (#Skills)
+          <img src="/assets/minecraft/icons/rod.png" alt="" className={styles.tabPixelIcon} />
+          <span>Skills (#Skills)</span>
         </button>
         <button
           type="button"
           onClick={() => handleTabChange('pets')}
           className={activeGearTab === 'pets' ? styles.navTabBtnActive : styles.navTabBtn}
         >
-          🐾 Pets ({fishingPets.length})
+          <img src="/assets/minecraft/pets/dolphin.png" alt="" className={styles.tabPixelIcon} />
+          <span>Pets ({fishingPets.length})</span>
         </button>
         <button
           type="button"
           onClick={() => handleTabChange('stats')}
           className={activeGearTab === 'stats' ? styles.navTabBtnActive : styles.navTabBtn}
         >
-          📊 Stats Breakdown
+          <img src="/assets/minecraft/icons/scc.png" alt="" className={styles.tabPixelIcon} />
+          <span>Stats Breakdown</span>
         </button>
       </div>
 
@@ -546,7 +577,16 @@ export default function ProfilePage() {
           <div className={styles.featuredSkillCard}>
             <div className={styles.featuredSkillHeader}>
               <div className={styles.featuredSkillTitle}>
-                <span>{featuredFishing.icon || '🎣'}</span>
+                {featuredFishing.icon?.startsWith('/') ||
+                featuredFishing.icon?.startsWith('http') ? (
+                  <img
+                    src={featuredFishing.icon}
+                    alt={featuredFishing.name}
+                    className={styles.featuredSkillIconImg}
+                  />
+                ) : (
+                  <span>{featuredFishing.icon || '🎣'}</span>
+                )}
                 <span>{featuredFishing.name}</span>
                 <span className={styles.featuredSkillLevelBadge}>
                   Level {featuredFishing.level}
@@ -621,7 +661,11 @@ export default function ProfilePage() {
                 <div key={s.key} className={styles.skillCard}>
                   <div className={styles.skillCardHeader}>
                     <div className={styles.skillCardIconName}>
-                      <span>{s.icon}</span>
+                      {s.icon?.startsWith('/') || s.icon?.startsWith('http') ? (
+                        <img src={s.icon} alt={s.name} className={styles.skillPixelIcon} />
+                      ) : (
+                        <span>{s.icon}</span>
+                      )}
                       <span>{s.name}</span>
                     </div>
                     {isMax ? (
@@ -1013,31 +1057,73 @@ export default function ProfilePage() {
             </div>
 
             <div className={styles.statsGrid}>
-              <div className={styles.statCard}>
-                <span className={styles.statLabel}>Sea Creature Chance</span>
-                <div className={styles.statValue}>
+              <div className={`${styles.statCard} ${styles.statCardSCC}`}>
+                <div className={styles.statCardHeader}>
+                  <div className={styles.statTitleGroup}>
+                    <img
+                      src="/assets/minecraft/icons/scc.png"
+                      alt="Sea Creature Chance"
+                      className={styles.statPixelIcon}
+                    />
+                    <span className={styles.statLabel}>Sea Creature Chance</span>
+                  </div>
+                  <span className={`${styles.statSymbolBadge} ${styles.badgeSCC}`}>α</span>
+                </div>
+                <div className={`${styles.statValue} ${styles.statValueSCC}`}>
                   {currentSCC} <span className={styles.statUnit}>%</span>
                 </div>
                 <span className={styles.statNote}>Real-time gear bonus applied</span>
               </div>
 
-              <div className={styles.statCard}>
-                <span className={styles.statLabel}>Fishing Speed</span>
-                <div className={styles.statValue}>{currentSpeed}</div>
-                <span className={styles.statNote}>Active rod + gear</span>
+              <div className={`${styles.statCard} ${styles.statCardSpeed}`}>
+                <div className={styles.statCardHeader}>
+                  <div className={styles.statTitleGroup}>
+                    <img
+                      src="/assets/minecraft/icons/fishing_speed.png"
+                      alt="Fishing Speed"
+                      className={styles.statPixelIcon}
+                    />
+                    <span className={styles.statLabel}>Fishing Speed</span>
+                  </div>
+                  <span className={`${styles.statSymbolBadge} ${styles.badgeSpeed}`}>⛯</span>
+                </div>
+                <div className={`${styles.statValue} ${styles.statValueSpeed}`}>{currentSpeed}</div>
+                <span className={styles.statNote}>Active rod + gear bonus</span>
               </div>
 
-              <div className={styles.statCard}>
-                <span className={styles.statLabel}>Treasure Chance</span>
-                <div className={styles.statValue}>
+              <div className={`${styles.statCard} ${styles.statCardTreasure}`}>
+                <div className={styles.statCardHeader}>
+                  <div className={styles.statTitleGroup}>
+                    <img
+                      src="/assets/minecraft/icons/treasure.png"
+                      alt="Treasure Chance"
+                      className={styles.statPixelIcon}
+                    />
+                    <span className={styles.statLabel}>Treasure Chance</span>
+                  </div>
+                  <span className={`${styles.statSymbolBadge} ${styles.badgeTreasure}`}>☘</span>
+                </div>
+                <div className={`${styles.statValue} ${styles.statValueTreasure}`}>
                   {currentTreasure} <span className={styles.statUnit}>%</span>
                 </div>
                 <span className={styles.statNote}>Default + enchants</span>
               </div>
 
-              <div className={styles.statCard}>
-                <span className={styles.statLabel}>Fishing Wisdom</span>
-                <div className={styles.statValue}>+{currentWisdom}</div>
+              <div className={`${styles.statCard} ${styles.statCardWisdom}`}>
+                <div className={styles.statCardHeader}>
+                  <div className={styles.statTitleGroup}>
+                    <img
+                      src="/assets/minecraft/icons/wisdom.png"
+                      alt="Fishing Wisdom"
+                      className={styles.statPixelIcon}
+                    />
+                    <span className={styles.statLabel}>Fishing Wisdom</span>
+                  </div>
+                  <span className={`${styles.statSymbolBadge} ${styles.badgeWisdom}`}>☯</span>
+                </div>
+                <div className={`${styles.statValue} ${styles.statValueWisdom}`}>
+                  +{currentWisdom}
+                </div>
                 <span className={styles.statNote}>Boosts fishing skill XP</span>
               </div>
             </div>
@@ -1045,22 +1131,40 @@ export default function ProfilePage() {
             {/* Currencies Bar */}
             <div className={styles.currenciesBar}>
               <div className={styles.currencyItem}>
-                <span className={styles.currencyLabel}>Purse Coins</span>
-                <span className={styles.currencyValue}>
-                  💰 {(stats.purse || 14200000).toLocaleString()}
-                </span>
+                <img
+                  src="/assets/minecraft/icons/coin.png"
+                  alt="Purse"
+                  className={styles.currencyPixelIcon}
+                />
+                <div className={styles.currencyItemText}>
+                  <span className={styles.currencyLabel}>Purse Coins</span>
+                  <span className={styles.currencyValue}>
+                    {(stats.purse || 14200000).toLocaleString()}
+                  </span>
+                </div>
               </div>
               <div className={styles.currencyItem}>
-                <span className={styles.currencyLabel}>Bank Balance</span>
-                <span className={styles.currencyValue}>
-                  🏦 {(stats.bank || 45000000).toLocaleString()}
-                </span>
+                <img
+                  src="/assets/minecraft/icons/bank.png"
+                  alt="Bank"
+                  className={styles.currencyPixelIcon}
+                />
+                <div className={styles.currencyItemText}>
+                  <span className={styles.currencyLabel}>Bank Balance</span>
+                  <span className={styles.currencyValue}>
+                    {(stats.bank || 45000000).toLocaleString()}
+                  </span>
+                </div>
               </div>
             </div>
 
             <div className={styles.adviceBanner}>
               <div className={styles.adviceHeader}>
-                <span className={styles.adviceIcon}>💡</span>
+                <img
+                  src="/assets/minecraft/icons/shard.png"
+                  alt="Advice"
+                  className={styles.advicePixelIcon}
+                />
                 <span className={styles.adviceTitle}>Advice</span>
               </div>
               <p className={styles.adviceText}>
@@ -1076,7 +1180,11 @@ export default function ProfilePage() {
       {/* Bottom Progress Bar */}
       <div className={styles.progressCard}>
         <div className={styles.progressInfo}>
-          <span className={styles.progressIcon}>🎣</span>
+          <img
+            src="/assets/minecraft/icons/rod.png"
+            alt="Fishing"
+            className={styles.tabPixelIcon}
+          />
           <div>
             <div className={styles.levelText}>Fishing {fishingLevel}</div>
             <div className={styles.levelXp}>
@@ -1096,14 +1204,26 @@ export default function ProfilePage() {
           </div>
           <span className={styles.progressPercentText}>
             {fishingLevel >= 50
-              ? 'Max Level 🌟'
+              ? 'Max Level (50)'
               : `${stats.progressPercent || 50}% to level ${fishingLevel + 1}`}
           </span>
         </div>
       </div>
 
       <div className={styles.syncNotice}>
-        <span>ℹ️</span>
+        <svg
+          className={styles.syncNoticeIcon}
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          width="14"
+          height="14"
+        >
+          <path
+            fillRule="evenodd"
+            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+            clipRule="evenodd"
+          />
+        </svg>
         <span>
           Data retrieved via Hypixel API and Mojang Services. Cached for 10 minutes to respect
           developer rate limits.

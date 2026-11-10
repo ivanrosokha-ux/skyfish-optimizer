@@ -1380,3 +1380,351 @@
     align-items: flex-start;
   }
 }
+
+/* ==========================================================================
+   SkyCrypt-styled Fishing Stats Board & Pixel Art Enhancements
+   ========================================================================== */
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.875rem;
+  margin-bottom: 1.25rem;
+}
+
+@media (max-width: 640px) {
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.statCard {
+  background: linear-gradient(145deg, rgba(28, 24, 20, 0.95) 0%, rgba(18, 15, 13, 0.98) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.statCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+
+.statCardSCC {
+  border-left: 3px solid #16968b;
+}
+
+.statCardSCC:hover {
+  border-color: #16968b;
+  box-shadow: 0 4px 16px rgba(22, 150, 139, 0.25);
+}
+
+.statCardSpeed {
+  border-left: 3px solid #55ffff;
+}
+
+.statCardSpeed:hover {
+  border-color: #55ffff;
+  box-shadow: 0 4px 16px rgba(85, 255, 255, 0.25);
+}
+
+.statCardTreasure {
+  border-left: 3px solid #ffaa00;
+}
+
+.statCardTreasure:hover {
+  border-color: #ffaa00;
+  box-shadow: 0 4px 16px rgba(255, 170, 0, 0.25);
+}
+
+.statCardWisdom {
+  border-left: 3px solid #c084fc;
+}
+
+.statCardWisdom:hover {
+  border-color: #c084fc;
+  box-shadow: 0 4px 16px rgba(192, 132, 252, 0.25);
+}
+
+.statCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.statTitleGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.statPixelIcon {
+  width: 22px;
+  height: 22px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+  flex-shrink: 0;
+}
+
+.statLabel {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #e5e5e5;
+  letter-spacing: -0.01em;
+}
+
+.statSymbolBadge {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 0.15rem 0.45rem;
+  border-radius: 0.375rem;
+  border: 1px solid;
+  line-height: 1;
+}
+
+.badgeSCC {
+  color: #16968b;
+  background-color: rgba(22, 150, 139, 0.15);
+  border-color: rgba(22, 150, 139, 0.4);
+}
+
+.badgeSpeed {
+  color: #55ffff;
+  background-color: rgba(85, 255, 255, 0.12);
+  border-color: rgba(85, 255, 255, 0.4);
+}
+
+.badgeTreasure {
+  color: #ffaa00;
+  background-color: rgba(255, 170, 0, 0.15);
+  border-color: rgba(255, 170, 0, 0.4);
+}
+
+.badgeWisdom {
+  color: #c084fc;
+  background-color: rgba(192, 132, 252, 0.15);
+  border-color: rgba(192, 132, 252, 0.4);
+}
+
+.statValue {
+  font-size: 1.875rem;
+  font-weight: 900;
+  font-family: var(--font-mono);
+  color: #ffffff;
+  line-height: 1.15;
+  margin: 0.25rem 0;
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+}
+
+.statValueSCC {
+  color: #2dd4bf;
+  text-shadow: 0 0 12px rgba(45, 212, 191, 0.35);
+}
+
+.statValueSpeed {
+  color: #67e8f9;
+  text-shadow: 0 0 12px rgba(103, 232, 249, 0.35);
+}
+
+.statValueTreasure {
+  color: #fbbf24;
+  text-shadow: 0 0 12px rgba(251, 191, 36, 0.35);
+}
+
+.statValueWisdom {
+  color: #d8b4fe;
+  text-shadow: 0 0 12px rgba(216, 180, 254, 0.35);
+}
+
+.statUnit {
+  font-size: 1.125rem;
+  font-weight: 700;
+  opacity: 0.85;
+}
+
+.statNote {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  line-height: 1.3;
+}
+
+/* Currencies Bar */
+.currenciesBar {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 0.625rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.25rem;
+}
+
+@media (max-width: 480px) {
+  .currenciesBar {
+    grid-template-columns: 1fr;
+  }
+}
+
+.currencyItem {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.currencyPixelIcon {
+  width: 22px;
+  height: 22px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+  flex-shrink: 0;
+}
+
+.currencyItemText {
+  display: flex;
+  flex-direction: column;
+}
+
+.currencyLabel {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.currencyValue {
+  font-size: 0.875rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: #ffaa00;
+}
+
+/* Advice Banner */
+.adviceBanner {
+  background: linear-gradient(135deg, rgba(255, 122, 69, 0.08) 0%, rgba(20, 16, 14, 0.95) 100%);
+  border: 1px solid rgba(255, 122, 69, 0.25);
+  border-radius: 0.625rem;
+  padding: 0.875rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.adviceHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.advicePixelIcon {
+  width: 18px;
+  height: 18px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  flex-shrink: 0;
+}
+
+.adviceTitle {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--color-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.adviceText {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.adviceText strong {
+  color: var(--text-main);
+  font-weight: 600;
+}
+
+/* Auxiliary Icons & Details */
+.chipPixelIcon {
+  width: 16px;
+  height: 16px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  vertical-align: middle;
+}
+
+.tabPixelIcon {
+  width: 18px;
+  height: 18px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  flex-shrink: 0;
+}
+
+.skillPixelIcon {
+  width: 20px;
+  height: 20px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  flex-shrink: 0;
+}
+
+.featuredSkillIconImg {
+  width: 26px;
+  height: 26px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  flex-shrink: 0;
+}
+
+.inputIconSvg {
+  width: 16px;
+  height: 16px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.syncNoticeIcon {
+  width: 14px;
+  height: 14px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+.profileBadgeDot {
+  color: var(--color-gain);
+  font-size: 0.625rem;
+  margin-right: 0.25rem;
+}
+
+.errorDot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: #ef4444;
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 0.75rem;
+  margin-right: 0.375rem;
+}
