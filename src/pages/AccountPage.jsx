@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { usePlayerStore } from '../store/usePlayerStore';
@@ -12,9 +12,27 @@ export default function AccountPage() {
   const [inputNick, setInputNick] = useState(username);
   const [saveSuccess, setSaveSuccess] = useState(false);
 
+  // Sync nickname with global store
+  useEffect(() => {
+    if (username) {
+      setInputNick(username);
+    }
+  }, [username]);
+
   // Before vs After build selection
   const [beforeBuildId, setBeforeBuildId] = useState(savedBuilds[0]?.id || '1');
   const [afterBuildId, setAfterBuildId] = useState(savedBuilds[savedBuilds.length - 1]?.id || '2');
+
+  useEffect(() => {
+    if (savedBuilds.length > 0) {
+      if (!savedBuilds.some((b) => b.id === beforeBuildId)) {
+        setBeforeBuildId(savedBuilds[0].id);
+      }
+      if (!savedBuilds.some((b) => b.id === afterBuildId)) {
+        setAfterBuildId(savedBuilds[savedBuilds.length - 1].id);
+      }
+    }
+  }, [savedBuilds, beforeBuildId, afterBuildId]);
 
   const beforeBuild = savedBuilds.find((b) => b.id === beforeBuildId) || savedBuilds[0] || {};
   const afterBuild =

@@ -12,6 +12,7 @@ export default function ProfilePage() {
     usePlayerProfile(player || 'ReefRunner', 'Lime');
 
   const [searchInput, setSearchInput] = useState(player || currentUsername);
+  const [activeGearTab, setActiveGearTab] = useState('gear');
 
   useEffect(() => {
     if (player && player !== currentUsername) {
@@ -102,45 +103,118 @@ export default function ProfilePage() {
         {/* Armor & Gear Card */}
         <div className={styles.card}>
           <div className={styles.cardHeader}>
-            <h2 className={styles.cardTitle}>Armor</h2>
+            <h2 className={styles.cardTitle}>Equipment</h2>
             <div className={styles.tabGroup}>
-              <button className={styles.tabBtnActive}>Gear</button>
-              <button className={styles.tabBtn}>Pets</button>
-              <button className={styles.tabBtn}>Stats</button>
+              <button
+                type="button"
+                onClick={() => setActiveGearTab('gear')}
+                className={activeGearTab === 'gear' ? styles.tabBtnActive : styles.tabBtn}
+              >
+                Gear
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveGearTab('pets')}
+                className={activeGearTab === 'pets' ? styles.tabBtnActive : styles.tabBtn}
+              >
+                Pets
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveGearTab('stats')}
+                className={activeGearTab === 'stats' ? styles.tabBtnActive : styles.tabBtn}
+              >
+                Stats
+              </button>
             </div>
           </div>
 
-          {/* 4 Armor Pieces Grid */}
-          <div className={styles.armorGrid}>
-            {armorItems.map((item) => (
-              <div key={item.slot || item.name} className={styles.armorItem}>
-                <div className={styles.armorIcon}>{item.icon}</div>
-                <div>
-                  <div className={styles.armorName}>{item.name}</div>
-                  <div className={styles.armorMeta}>{item.meta}</div>
+          {activeGearTab === 'gear' && (
+            <>
+              {/* 4 Armor Pieces Grid */}
+              <div className={styles.armorGrid}>
+                {armorItems.map((item) => (
+                  <div key={item.slot || item.name} className={styles.armorItem}>
+                    <div className={styles.armorIcon}>{item.icon}</div>
+                    <div>
+                      <div className={styles.armorName}>{item.name}</div>
+                      <div className={styles.armorMeta}>{item.meta}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Rod & Pet Row */}
+              <div className={styles.weaponGrid}>
+                <div className={styles.weaponItem}>
+                  <div className={styles.armorIcon}>{rodItem.icon}</div>
+                  <div>
+                    <div className={styles.armorName}>{rodItem.name}</div>
+                    <div className={styles.armorMeta}>{rodItem.meta}</div>
+                  </div>
+                </div>
+
+                <div className={styles.weaponItem}>
+                  <div className={styles.armorIcon}>{petItem.icon}</div>
+                  <div>
+                    <div className={styles.armorName}>{petItem.name}</div>
+                    <div className={styles.armorMeta}>{petItem.meta}</div>
+                  </div>
                 </div>
               </div>
-            ))}
-          </div>
+            </>
+          )}
 
-          {/* Rod & Pet Row */}
-          <div className={styles.weaponGrid}>
-            <div className={styles.weaponItem}>
-              <div className={styles.armorIcon}>{rodItem.icon}</div>
-              <div>
-                <div className={styles.armorName}>{rodItem.name}</div>
-                <div className={styles.armorMeta}>{rodItem.meta}</div>
+          {activeGearTab === 'pets' && (
+            <div className={styles.petDetailCard}>
+              <div className={styles.petHeader}>
+                <span className={styles.petLargeIcon}>{petItem.icon}</span>
+                <div>
+                  <div className={styles.petFullName}>{petItem.name}</div>
+                  <div className={styles.petRarity}>{petItem.meta}</div>
+                </div>
+              </div>
+              <div className={styles.perksList}>
+                <div className={styles.perkItem}>
+                  <span className={styles.perkBullet}>🐟</span>
+                  <span>Pod Finder: +25% Sea Creature spawn rate in groups</span>
+                </div>
+                <div className={styles.perkItem}>
+                  <span className={styles.perkBullet}>⏱️</span>
+                  <span>Wave Speed: +15 Fishing Speed when surrounded by water</span>
+                </div>
+                <div className={styles.perkItem}>
+                  <span className={styles.perkBullet}>🍀</span>
+                  <span>Held Item: Lucky Clover (+7% Sea Creature Chance)</span>
+                </div>
               </div>
             </div>
+          )}
 
-            <div className={styles.weaponItem}>
-              <div className={styles.armorIcon}>{petItem.icon}</div>
-              <div>
-                <div className={styles.armorName}>{petItem.name}</div>
-                <div className={styles.armorMeta}>{petItem.meta}</div>
+          {activeGearTab === 'stats' && (
+            <div className={styles.gearStatsTable}>
+              <div className={styles.statBreakRow}>
+                <span>Armor Base SCC</span>
+                <span className={styles.gainText}>+32% SCC</span>
+              </div>
+              <div className={styles.statBreakRow}>
+                <span>Submerged Reforges</span>
+                <span className={styles.gainText}>+8% SCC</span>
+              </div>
+              <div className={styles.statBreakRow}>
+                <span>Rod Enchantments & Reforge</span>
+                <span className={styles.gainText}>+14% SCC</span>
+              </div>
+              <div className={styles.statBreakRow}>
+                <span>Pet Bonus & Item</span>
+                <span className={styles.gainText}>+10% SCC</span>
+              </div>
+              <div className={styles.statBreakRowTotal}>
+                <span>Total Equipped SCC</span>
+                <span className={styles.gainTextTotal}>{stats.scc || 64}%</span>
               </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Fishing Stats Card */}

@@ -160,6 +160,51 @@ export default function OptimizerPage() {
               />
               <span className={styles.currencyText}>coins</span>
             </div>
+            <div className={styles.presetRow}>
+              <button
+                type="button"
+                onClick={() => {
+                  const b = (Number(inputBudget) || 0) + 1000000;
+                  setInputBudget(b);
+                  setBudget(b);
+                }}
+                className={styles.presetBtn}
+              >
+                +1M
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  const b = (Number(inputBudget) || 0) + 5000000;
+                  setInputBudget(b);
+                  setBudget(b);
+                }}
+                className={styles.presetBtn}
+              >
+                +5M
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  const b = (Number(inputBudget) || 0) + 10000000;
+                  setInputBudget(b);
+                  setBudget(b);
+                }}
+                className={styles.presetBtn}
+              >
+                +10M
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setInputBudget(5000000);
+                  setBudget(5000000);
+                }}
+                className={styles.presetBtn}
+              >
+                Reset (5M)
+              </button>
+            </div>
             <button type="submit" className={styles.calcBtn}>
               Calculate
             </button>
