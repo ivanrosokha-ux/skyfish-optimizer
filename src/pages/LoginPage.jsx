@@ -7,7 +7,7 @@ export default function LoginPage() {
   const [isRegister, setIsRegister] = useState(false);
   const [email, setEmail] = useState('angler@example.com');
   const [password, setPassword] = useState('password123');
-  const { login, register, isLoading, error } = useAuth();
+  const { user, isAuthenticated, login, register, demoLogin, logout, isLoading, error } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -18,9 +18,40 @@ export default function LoginPage() {
     }
   };
 
+  const handleDemoLogin = async () => {
+    const result = await demoLogin();
+    if (result.success) {
+      navigate('/account');
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.card}>
+        {/* If already logged in, show current session status */}
+        {isAuthenticated && user && (
+          <div className={styles.activeSessionBanner}>
+            <div className={styles.activeSessionHeader}>
+              <span className={styles.statusDot}>●</span>
+              <span>
+                Signed in as <strong>{user.email}</strong>
+              </span>
+            </div>
+            <div className={styles.activeSessionActions}>
+              <button
+                type="button"
+                onClick={() => navigate('/account')}
+                className={styles.sessionLinkBtn}
+              >
+                Go to Account →
+              </button>
+              <button type="button" onClick={logout} className={styles.sessionLogoutBtn}>
+                Log out
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Tabs */}
         <div className={styles.tabs}>
           <button
@@ -39,7 +70,7 @@ export default function LoginPage() {
           </button>
         </div>
 
-        {error && <div className={styles.errorBanner}>{error}</div>}
+        {error && <div className={styles.errorBanner}>⚠️ {error}</div>}
 
         <form onSubmit={handleSubmit} className={styles.form}>
           <div>
@@ -77,6 +108,16 @@ export default function LoginPage() {
 
           <button type="submit" disabled={isLoading} className={styles.submitBtn}>
             {isLoading ? 'Зачекайте...' : isRegister ? 'Register' : 'Log in'}
+          </button>
+
+          <button
+            type="button"
+            onClick={handleDemoLogin}
+            disabled={isLoading}
+            className={styles.demoBtn}
+            title="Швидкий тестовий вхід без введення пароля"
+          >
+            ⚡ Quick Demo Sign-in (1 click)
           </button>
         </form>
 

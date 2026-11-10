@@ -19,6 +19,60 @@
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 }
 
+.activeSessionBanner {
+  background-color: rgba(62, 209, 107, 0.1);
+  border: 1px solid rgba(62, 209, 107, 0.3);
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--text-main);
+}
+
+.activeSessionHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.statusDot {
+  color: #3ed16b;
+  font-size: 0.875rem;
+}
+
+.activeSessionActions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sessionLinkBtn {
+  background: none;
+  border: none;
+  color: var(--color-accent);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+}
+
+.sessionLogoutBtn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  cursor: pointer;
+  padding: 0;
+  margin-left: auto;
+}
+
+.sessionLogoutBtn:hover {
+  color: #f87171;
+}
+
 .tabs {
   display: flex;
   border-bottom: 1px solid var(--border-color);
@@ -33,6 +87,9 @@
   padding-bottom: 0.5rem;
   color: var(--color-accent);
   transition: color 0.2s ease;
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
 .tabActive::after {
@@ -50,6 +107,9 @@
   padding-bottom: 0.5rem;
   color: var(--text-muted);
   transition: color 0.2s ease;
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
 .tabInactive:hover {
@@ -123,6 +183,8 @@
   color: #ffffff;
   font-weight: 600;
   border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
   transition: background-color 0.2s ease;
   font-size: 0.75rem;
   margin-top: 0.5rem;
@@ -130,6 +192,29 @@
 
 .submitBtn:hover {
   background-color: var(--color-accent-hover);
+}
+
+.demoBtn {
+  width: 100%;
+  padding: 0.5rem;
+  background-color: var(--bg-card-sub);
+  color: var(--text-main);
+  border: 1px dashed var(--border-color);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.75rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+}
+
+.demoBtn:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  background-color: rgba(217, 162, 27, 0.08);
 }
 
 .footnote {
@@ -149,7 +234,8 @@
   line-height: 1.4;
 }
 
-.submitBtn:disabled {
+.submitBtn:disabled,
+.demoBtn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }

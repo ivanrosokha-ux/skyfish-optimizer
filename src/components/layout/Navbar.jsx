@@ -1,7 +1,10 @@
 import { Link, NavLink } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
 import styles from './Navbar.module.css';
 
 export default function Navbar() {
+  const { user, isAuthenticated } = useAuth();
+
   const links = [
     { path: '/', label: 'Profile' },
     { path: '/optimizer', label: 'Optimizer' },
@@ -26,6 +29,18 @@ export default function Navbar() {
             {link.label}
           </NavLink>
         ))}
+
+        {isAuthenticated && user ? (
+          <span className={styles.userBadge} title={`Signed in as ${user.email}`}>
+            <span className={styles.userDot}>●</span>
+            {user.name || user.email.split('@')[0]}
+          </span>
+        ) : (
+          <span className={styles.guestBadge}>
+            <span className={styles.guestDot}>○</span>
+            Guest
+          </span>
+        )}
       </nav>
     </header>
   );
