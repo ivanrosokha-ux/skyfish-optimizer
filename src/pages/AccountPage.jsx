@@ -123,7 +123,7 @@ export default function AccountPage() {
 
           <div className={styles.buildsList}>
             {savedBuilds.map((build) => (
-              <div key={build.id} className={styles.buildCard}>
+              <div key={build.id} className={styles.buildCard} data-testid="build-card">
                 <div className={styles.buildTitleRow}>
                   <span>🔖</span>
                   <span className={styles.buildName}>{build.name}</span>
@@ -146,6 +146,19 @@ export default function AccountPage() {
                 </div>
               </div>
             ))}
+            {savedBuilds.length === 0 && (
+              <div
+                style={{
+                  color: 'var(--text-muted)',
+                  fontSize: '0.8125rem',
+                  padding: '1rem',
+                  textAlign: 'center',
+                }}
+              >
+                🎣 Немає збережених збірок. Розрахуйте спорядження в Оптимізаторі та збережіть свій
+                план!
+              </div>
+            )}
           </div>
 
           <div className={styles.footerNotice}>
@@ -176,6 +189,7 @@ export default function AccountPage() {
                     {b.name}
                   </option>
                 ))}
+                {savedBuilds.length === 0 && <option value="">Немає збірок</option>}
               </select>
             </div>
             <div>
@@ -190,6 +204,7 @@ export default function AccountPage() {
                     {b.name}
                   </option>
                 ))}
+                {savedBuilds.length === 0 && <option value="">Немає збірок</option>}
               </select>
             </div>
           </div>

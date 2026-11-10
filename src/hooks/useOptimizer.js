@@ -92,11 +92,21 @@ export function useOptimizer() {
       name: planName,
       scc: budgetAllocation.projectedSCC,
       speed: stats.fishingSpeed || 180,
+      treasure: stats.treasureChance || 12,
+      wisdom: stats.fishingWisdom || 30,
       cost: budgetAllocation.totalCost,
       upgradesCount: budgetAllocation.selectedItems.length,
+      meta: `${budgetAllocation.selectedItems.length} upgrades · ${budgetAllocation.totalCost.toLocaleString()} coins`,
     });
     return planName;
-  }, [targetStat, budgetAllocation, addSavedBuild, stats.fishingSpeed]);
+  }, [
+    targetStat,
+    budgetAllocation,
+    addSavedBuild,
+    stats.fishingSpeed,
+    stats.treasureChance,
+    stats.fishingWisdom,
+  ]);
 
   return {
     rankedUpgrades,

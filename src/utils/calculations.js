@@ -3,17 +3,20 @@
  * Returns null if statGain is less than or equal to 0.
  */
 export function calculateCostPerStat(price, statGain) {
-  if (!statGain || statGain <= 0) return null;
+  if (!statGain || statGain <= 0 || !price || price <= 0) return null;
   return Math.round(price / statGain);
 }
 
 /**
  * Multiple-choice knapsack solver for budget allocation.
  */
-export function solveKnapsackBudget(availableUpgrades, budget) {
+export function solveKnapsackBudget(availableUpgrades = [], budget = 0) {
+  const safeBudget = Math.max(0, Number(budget) || 0);
+  const items = Array.isArray(availableUpgrades) ? availableUpgrades : [];
+
   // Sort by efficiency (cost per stat ascending)
-  const sorted = [...availableUpgrades]
-    .filter((item) => item.gain > 0 && item.cost <= budget)
+  const sorted = [...items]
+    .filter((item) => item && item.gain > 0 && item.cost <= safeBudget)
     .sort((a, b) => a.cost / a.gain - b.cost / b.gain);
 
   const selected = [];
@@ -22,7 +25,7 @@ export function solveKnapsackBudget(availableUpgrades, budget) {
   let totalGain = 0;
 
   for (const item of sorted) {
-    if (!usedGroups.has(item.group) && totalCost + item.cost <= budget) {
+    if (!usedGroups.has(item.group) && totalCost + item.cost <= safeBudget) {
       selected.push(item);
       usedGroups.add(item.group);
       totalCost += item.cost;
@@ -34,6 +37,6 @@ export function solveKnapsackBudget(availableUpgrades, budget) {
     selectedItems: selected,
     totalCost,
     totalGain,
-    remainingBudget: budget - totalCost,
+    remainingBudget: safeBudget - totalCost,
   };
 }
