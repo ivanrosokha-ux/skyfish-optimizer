@@ -1,3 +1,5 @@
+import zlib from 'zlib';
+
 /**
  * Hypixel Public API Service
  * Conforms to official Hypixel API Policies & Terms of Service:
@@ -96,4 +98,57 @@ export async function getPlayerSkyblockProfiles(uuid) {
     console.warn(`[HypixelService] Profile fetch error for ${uuid}:`, err.message);
     return null;
   }
+}
+
+/**
+ * Decode Base64 Gzip Minecraft NBT inventory buffer to extract item display names
+ */
+export function decodeNbtItemNames(rawBase64) {
+  if (!rawBase64) return [];
+  try {
+    const buf = Buffer.from(rawBase64, 'base64');
+    const decompressed = zlib.gunzipSync(buf).toString('utf8');
+    const names = [];
+    // eslint-disable-next-line no-control-regex
+    const regex = /Name\x00[\s\S]([^\x00\x0a\r]+?)(?=\x00|\x0a|\r)/g;
+    let match;
+    while ((match = regex.exec(decompressed)) !== null) {
+      const clean = match[1].replace(/§[0-9a-fk-or]/gi, '').trim();
+      if (clean.length > 2) names.push(clean);
+    }
+    return names;
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Calculate SkyBlock fishing level from raw skill experience
+ */
+export function calculateFishingLevel(xp = 0) {
+  const thresholds = [
+    50, 175, 375, 675, 1175, 1925, 2925, 4425, 6425, 9925, 14925, 22425, 32425, 47425, 67425, 97425,
+    147425, 222425, 322425, 522425, 822425, 1222425, 1722425, 2322425, 3022425, 3822425, 4722425,
+    5722425, 6822425, 8022425, 9322425, 10722425, 12222425, 13822425, 15522425, 17322425, 19222425,
+    21222425, 23322425, 25522425, 27822425, 30222425, 32722425, 35322425, 38072425, 40972425,
+    44072425, 47472425, 51172425, 55172425,
+  ];
+
+  let level = 0;
+  for (let i = 0; i < thresholds.length; i++) {
+    if (xp >= thresholds[i]) {
+      level = i + 1;
+    } else {
+      break;
+    }
+  }
+
+  const prev = level === 0 ? 0 : thresholds[level - 1];
+  const next = level >= thresholds.length ? thresholds[thresholds.length - 1] : thresholds[level];
+  const progressPercent = Math.min(
+    100,
+    Math.max(0, Math.round(((xp - prev) / (next - prev || 1)) * 100))
+  );
+
+  return { level: Math.max(1, level), progressPercent };
 }

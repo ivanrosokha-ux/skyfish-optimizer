@@ -140,6 +140,9 @@
 .forgotLink {
   font-size: 0.6875rem;
   color: var(--text-muted);
+  background: none;
+  border: none;
+  padding: 0;
   cursor: pointer;
   transition: color 0.2s ease;
 }
@@ -205,6 +208,16 @@
   background-color: rgba(239, 68, 68, 0.15);
   border: 1px solid rgba(239, 68, 68, 0.4);
   color: #fca5a5;
+  padding: 0.625rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+.infoBanner {
+  background-color: rgba(59, 130, 246, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.4);
+  color: #93c5fd;
   padding: 0.625rem 0.75rem;
   border-radius: 0.5rem;
   font-size: 0.75rem;

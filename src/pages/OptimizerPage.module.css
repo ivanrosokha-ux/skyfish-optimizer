@@ -413,3 +413,29 @@
   border-color: var(--color-accent);
   color: var(--color-accent);
 }
+
+.bazaarTicker {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background-color: var(--bg-card-sub);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  padding: 0.625rem 1rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  overflow-x: auto;
+}
+
+.bazaarTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--color-gain);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.bazaarItem {
+  white-space: nowrap;
+}

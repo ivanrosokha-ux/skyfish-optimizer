@@ -8,8 +8,15 @@ export default function ProfilePage() {
   const { player } = useParams();
   const navigate = useNavigate();
   const { stats } = usePlayerStore();
-  const { profileData, loading, currentUsername, currentProfile, changeProfile, searchNickname } =
-    usePlayerProfile(player || 'ReefRunner', 'Lime');
+  const {
+    profileData,
+    loading,
+    error,
+    currentUsername,
+    currentProfile,
+    changeProfile,
+    searchNickname,
+  } = usePlayerProfile(player || 'ReefRunner', 'Lime');
 
   const [searchInput, setSearchInput] = useState(player || currentUsername);
   const [activeGearTab, setActiveGearTab] = useState('gear');
@@ -56,9 +63,12 @@ export default function ProfilePage() {
           Fishing stats for <span className={styles.accent}>{currentUsername}</span> on{' '}
           <span className={styles.accent}>{currentProfile}</span>
           {loading && <span className={styles.cardSubtitle}> (Оновлення...)</span>}
+          {profileData?.source && <span className={styles.apiBadge}>● {profileData.source}</span>}
         </h1>
         <p className={styles.subtitle}>Your gear, your stats. A clearer path to your next catch.</p>
       </div>
+
+      {error && <div className={styles.errorBanner}>⚠️ {error}</div>}
 
       {/* Search Bar & Profiles */}
       <div className={styles.searchSection}>
@@ -292,7 +302,11 @@ export default function ProfilePage() {
           <span className={styles.progressIcon}>🎣</span>
           <div>
             <div className={styles.levelText}>Fishing {stats.fishingLevel || 47}</div>
-            <div className={styles.levelXp}>1,240 / 2,500 XP</div>
+            <div className={styles.levelXp}>
+              {stats.rawExp
+                ? `${stats.rawExp.toLocaleString()} Skill XP`
+                : `${stats.progressPercent || 50}% progress`}
+            </div>
           </div>
         </div>
 
@@ -304,7 +318,9 @@ export default function ProfilePage() {
             />
           </div>
           <span className={styles.progressPercentText}>
-            {stats.progressPercent || 50}% to level 48
+            {(stats.fishingLevel || 47) >= 50
+              ? 'Max Level 🌟'
+              : `${stats.progressPercent || 50}% to level ${(stats.fishingLevel || 47) + 1}`}
           </span>
         </div>
       </div>

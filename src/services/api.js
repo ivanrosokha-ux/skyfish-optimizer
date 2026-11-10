@@ -171,3 +171,18 @@ export async function loginUserApi(email, password) {
 export async function registerUserApi(email, password) {
   return loginUserApi(email, password);
 }
+
+/**
+ * Fetch live Hypixel Bazaar summary
+ */
+export async function fetchBazaarSummary() {
+  try {
+    const res = await fetch(`${API_BASE}/bazaar/summary`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    return data.data || {};
+  } catch (err) {
+    console.warn('API fallback for fetchBazaarSummary:', err.message);
+    return null;
+  }
+}

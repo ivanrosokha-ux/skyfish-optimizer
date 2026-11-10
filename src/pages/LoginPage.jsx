@@ -7,11 +7,13 @@ export default function LoginPage() {
   const [isRegister, setIsRegister] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [infoNotice, setInfoNotice] = useState('');
   const { user, isAuthenticated, login, register, logout, isLoading, error } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setInfoNotice('');
     const result = isRegister ? await register(email, password) : await login(email, password);
     if (result.success) {
       navigate('/account');
@@ -64,6 +66,7 @@ export default function LoginPage() {
         </div>
 
         {error && <div className={styles.errorBanner}>⚠️ {error}</div>}
+        {infoNotice && <div className={styles.infoBanner}>ℹ️ {infoNotice}</div>}
 
         <form onSubmit={handleSubmit} className={styles.form}>
           <div>
@@ -84,7 +87,17 @@ export default function LoginPage() {
           <div>
             <div className={styles.labelRow}>
               <label className={styles.label}>Password</label>
-              <span className={styles.forgotLink}>Forgot password?</span>
+              <button
+                type="button"
+                onClick={() =>
+                  setInfoNotice(
+                    'Для скидання паролю надішліть запит адміністратору або скористайтеся стандартними обліковими даними.'
+                  )
+                }
+                className={styles.forgotLink}
+              >
+                Forgot password?
+              </button>
             </div>
             <div className={styles.inputBox}>
               <span className={styles.icon}>🔒</span>

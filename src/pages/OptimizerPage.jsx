@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useOptimizer } from '../hooks/useOptimizer';
 import { usePlayerStore } from '../store/usePlayerStore';
+import { fetchBazaarSummary } from '../services/api';
 import styles from './OptimizerPage.module.css';
 
 export default function OptimizerPage() {
-  const { username, profile } = usePlayerStore();
+  const { username, profile, stats } = usePlayerStore();
   const {
     rankedUpgrades,
     budgetAllocation,
@@ -19,6 +20,21 @@ export default function OptimizerPage() {
 
   const [inputBudget, setInputBudget] = useState(budget);
   const [saveMessage, setSaveMessage] = useState('');
+  const [bazaarPrices, setBazaarPrices] = useState(null);
+
+  useEffect(() => {
+    setInputBudget(budget);
+  }, [budget]);
+
+  useEffect(() => {
+    let mounted = true;
+    fetchBazaarSummary().then((data) => {
+      if (mounted && data) setBazaarPrices(data);
+    });
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const handleCalculate = (e) => {
     e.preventDefault();
@@ -141,6 +157,29 @@ export default function OptimizerPage() {
             Prices in coins · pp = percentage points · Estimated gains relative to your current
             gear.
           </div>
+
+          {bazaarPrices && (
+            <div className={styles.bazaarTicker}>
+              <span className={styles.bazaarTag}>🟢 Hypixel Bazaar Live:</span>
+              <span className={styles.bazaarItem}>
+                🦈 Shark Fin: ~
+                {Math.round(bazaarPrices.ENCHANTED_SHARK_FIN?.buyPrice || 58999).toLocaleString()}{' '}
+                coins
+              </span>
+              <span>·</span>
+              <span className={styles.bazaarItem}>
+                🧽 Wet Sponge: ~
+                {Math.round(bazaarPrices.ENCHANTED_WET_SPONGE?.buyPrice || 80199).toLocaleString()}{' '}
+                coins
+              </span>
+              <span>·</span>
+              <span className={styles.bazaarItem}>
+                🦷 Tiger Tooth: ~
+                {Math.round(bazaarPrices.TIGER_SHARK_TOOTH?.buyPrice || 123980).toLocaleString()}{' '}
+                coins
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Budget Calculator (1 col) */}
@@ -204,6 +243,32 @@ export default function OptimizerPage() {
               >
                 Reset (5M)
               </button>
+              {stats.purse > 0 && (
+                <button
+                  type="button"
+                  title="Використати монети з гаманця"
+                  onClick={() => {
+                    setInputBudget(stats.purse);
+                    setBudget(stats.purse);
+                  }}
+                  className={styles.presetBtn}
+                >
+                  Purse ({Math.round(stats.purse / 1000000)}M)
+                </button>
+              )}
+              {stats.bank > 0 && (
+                <button
+                  type="button"
+                  title="Використати баланс банку"
+                  onClick={() => {
+                    setInputBudget(stats.bank);
+                    setBudget(stats.bank);
+                  }}
+                  className={styles.presetBtn}
+                >
+                  Bank ({Math.round(stats.bank / 1000000)}M)
+                </button>
+              )}
             </div>
             <button type="submit" className={styles.calcBtn}>
               Calculate

@@ -1,5 +1,13 @@
 import express from 'express';
 import cors from 'cors';
+
+// Load .env file natively in Node 20.6+
+try {
+  process.loadEnvFile();
+} catch {
+  // Ignore missing .env in environments where variables are passed directly
+}
+
 import authRoutes from './routes/authRoutes.js';
 import playerRoutes from './routes/playerRoutes.js';
 import upgradesRoutes from './routes/upgradesRoutes.js';

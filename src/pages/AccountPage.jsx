@@ -95,6 +95,7 @@ export default function AccountPage() {
                   value={inputNick}
                   onChange={(e) => setInputNick(e.target.value)}
                   className={styles.inputActive}
+                  placeholder="ReefRunner"
                 />
               </div>
             </div>

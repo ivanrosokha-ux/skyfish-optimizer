@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { fetchPlayerProfile } from '../services/api';
 import { usePlayerStore } from '../store/usePlayerStore';
 
@@ -10,9 +10,16 @@ export function usePlayerProfile(initialNickname = 'ReefRunner', initialProfile 
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const lastFetchedKey = useRef('');
 
   const loadProfile = useCallback(
     async (nick, prof) => {
+      const key = `${(nick || '').toLowerCase()}:${(prof || '').toLowerCase()}`;
+      if (lastFetchedKey.current === key && profileData) {
+        return;
+      }
+      lastFetchedKey.current = key;
+
       setLoading(true);
       setError(null);
       try {
@@ -21,13 +28,20 @@ export function usePlayerProfile(initialNickname = 'ReefRunner', initialProfile 
         if (data.stats) {
           setStats(data.stats);
         }
+        if (data.profile && data.profile !== prof) {
+          lastFetchedKey.current = `${(data.username || nick).toLowerCase()}:${data.profile.toLowerCase()}`;
+          setProfile(data.profile);
+        }
+        if (data.username && data.username !== nick) {
+          setUsername(data.username);
+        }
       } catch (err) {
         setError(err.message || 'Не вдалося завантажити профіль гравця');
       } finally {
         setLoading(false);
       }
     },
-    [setStats]
+    [setStats, setProfile, setUsername, profileData]
   );
 
   useEffect(() => {
@@ -36,6 +50,7 @@ export function usePlayerProfile(initialNickname = 'ReefRunner', initialProfile 
 
   const changeProfile = useCallback(
     (newProfileName) => {
+      lastFetchedKey.current = '';
       setProfile(newProfileName);
       loadProfile(username, newProfileName);
     },
@@ -44,6 +59,7 @@ export function usePlayerProfile(initialNickname = 'ReefRunner', initialProfile 
 
   const searchNickname = useCallback(
     (newNick) => {
+      lastFetchedKey.current = '';
       setUsername(newNick);
       loadProfile(newNick, profile);
     },
@@ -58,6 +74,9 @@ export function usePlayerProfile(initialNickname = 'ReefRunner', initialProfile 
     currentProfile: profile,
     changeProfile,
     searchNickname,
-    refetch: () => loadProfile(username, profile),
+    refetch: () => {
+      lastFetchedKey.current = '';
+      loadProfile(username, profile);
+    },
   };
 }
