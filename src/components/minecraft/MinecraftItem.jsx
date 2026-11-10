@@ -22,8 +22,18 @@ export default function MinecraftItem({
   const rarityKey = (item.rarity || item.tier || '').toUpperCase();
   const rarityClass = styles[`rarity${rarityKey}`] || '';
 
-  const fallbackTexture =
-    item.slot === 'rod'
+  const isPet =
+    item.slot === 'pet' ||
+    item.tier !== undefined ||
+    item.type !== undefined ||
+    (item.displayName && item.displayName.includes('[Lvl'));
+
+  const petKey = (item.type || item.name || '').toLowerCase().replace(/\s+/g, '_');
+  const petFallback = `/assets/minecraft/pets/${petKey}.png`;
+
+  const fallbackTexture = isPet
+    ? petFallback
+    : item.slot === 'rod'
       ? '/assets/minecraft/fishing_rod.png'
       : item.slot === 'helmet'
         ? '/assets/minecraft/diamond_helmet.png'
@@ -87,7 +97,9 @@ export default function MinecraftItem({
           className={styles.texture}
           loading="lazy"
           onError={(e) => {
-            if (e.target.src !== fallbackTexture) {
+            if (isPet && !e.target.src.endsWith('/assets/minecraft/pets/dolphin.png')) {
+              e.target.src = '/assets/minecraft/pets/dolphin.png';
+            } else if (!isPet && e.target.src !== fallbackTexture) {
               e.target.src = fallbackTexture;
             }
           }}

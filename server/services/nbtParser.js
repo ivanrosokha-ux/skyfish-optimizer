@@ -51,7 +51,7 @@ export function getItemTexture(item, slotHint = '') {
       const skinUrl = json?.textures?.SKIN?.url;
       if (skinUrl) {
         const hash = skinUrl.split('/').pop();
-        return `https://mc-heads.net/head/${hash}`;
+        return `https://skinrender.dev/render/texture:${hash}/head`;
       }
     } catch {
       // fallback

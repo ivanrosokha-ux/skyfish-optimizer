@@ -113,8 +113,7 @@ export async function getPlayerProfile(req, res) {
       displayName: `[Lvl 100] ${data.pet?.name || 'Dolphin'}`,
       tier: 'LEGENDARY',
       level: 100,
-      texture:
-        'https://mc-heads.net/head/8e4443772f932f2ec52e27e460e0300c7baa803e1cb1cc6f4cf8b6ddb565d33a',
+      texture: '/assets/minecraft/pets/dolphin.png',
       stats: { scc: 10, fishingSpeed: 25, fishingWisdom: 0 },
       lore: [
         `§6[Lvl 100] ${data.pet?.name || 'Dolphin'}`,
@@ -388,7 +387,7 @@ export async function getPlayerProfile(req, res) {
             slot: 'helmet',
             stats: { scc: 0, fishingSpeed: 0 },
             texture:
-              'https://mc-heads.net/head/b2ad235b9458cc26c9dd794a35c1100e1b5bbe4a0c6c3da6ffd4830006683cb9',
+              'https://skinrender.dev/render/texture:b2ad235b9458cc26c9dd794a35c1100e1b5bbe4a0c6c3da6ffd4830006683cb9/head',
             lore: ['Groovy Helix Helmet', '§7Equipped Helmet'],
           };
 
@@ -820,8 +819,7 @@ export async function getPlayerProfile(req, res) {
     tier: 'EPIC',
     level: 80,
     meta: 'Level 80 · Epic',
-    texture:
-      'https://mc-heads.net/head/8e4443772f932f2ec52e27e460e0300c7baa803e1cb1cc6f4cf8b6ddb565d33a',
+    texture: '/assets/minecraft/pets/dolphin.png',
     stats: { scc: 8, fishingSpeed: 20, fishingWisdom: 0 },
     lore: ['[Lvl 80] Dolphin', '§7Sea Creature Chance: §3+8%', '§7Fishing Speed: §b+20'],
   };

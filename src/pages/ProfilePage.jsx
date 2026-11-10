@@ -227,8 +227,7 @@ export default function ProfilePage() {
       name: 'Dolphin',
       displayName: '[Lvl 80] Dolphin',
       meta: 'Level 80 · Epic',
-      texture:
-        'https://mc-heads.net/head/8e4443772f932f2ec52e27e460e0300c7baa803e1cb1cc6f4cf8b6ddb565d33a',
+      texture: '/assets/minecraft/pets/dolphin.png',
       stats: { scc: 8, fishingSpeed: 20 },
     };
 

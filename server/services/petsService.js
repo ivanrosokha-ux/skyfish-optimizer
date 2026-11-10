@@ -2,19 +2,46 @@
  * Service for calculating SkyBlock Pet levels, perks, textures, and fishing stats
  */
 
+const KNOWN_LOCAL_PETS = new Set([
+  'dolphin',
+  'ammonite',
+  'flying_fish',
+  'megalodon',
+  'baby_yeti',
+  'blue_whale',
+  'squid',
+  'penguin',
+  'jade_dragon',
+  'golden_dragon',
+  'guardian',
+  'ghoul',
+  'reindeer',
+  'bal',
+  'black_cat',
+  'blaze',
+  'grandma_wolf',
+  'silverfish',
+]);
+
 const PET_SKIN_HASHES = {
-  JADE_DRAGON: 'b2ad235b9458cc26c9dd794a35c1100e1b5bbe4a0c6c3da6ffd4830006683cb9',
-  GOLDEN_DRAGON: '1fc3268472ce8ec8a5717e34ef3ec9c5040ff9b14243b9188d3d9fe2374e64f0',
-  MEGALODON: '12188ab6bc6784d00874e4c29c8e10e74b3ab3b03f0b2f5b5f257bf3fe8705',
-  AMMONITE: 'a5ffc17d3d7cae51f8a2f4dd12b2e9e62319c5c707d885a03e6206c4b2eb01e3',
-  DOLPHIN: '8e4443772f932f2ec52e27e460e0300c7baa803e1cb1cc6f4cf8b6ddb565d33a',
-  FLYING_FISH: '3abb9449856f6ffc6b5e0ee0979bf4dd8ea9d10e53f1ef1a49ab1385f0962308',
-  SQUID: '01433be30843599c279d6955a5d4771e7d7373f1d8c199e8d3fbfa9713e2f',
-  PENGUIN: '9a2b53b8fc7f3f1e94d8cb845ea07e8ef8eb605c2a12ad35cb35b2e3ffbbf5',
-  BLUE_WHALE: 'dab70ea9c6a1cf8a6234b7f43394c8e762ec8ff90d565ff9bc6a445cb4aa',
-  BABY_YETI: 'ab4740e53a921d743a6d4889c256561f7db1f9db7c37fc36d93427181fc187',
-  GHOUL: '85f528fae9cae5e197da96df6aef0c84c7e6c99c80520a2e584344db7e89e9d',
-  REINDEER: '819d9b4b0051e70d47e70ea2257e3f8983fb087a3cb98e9462b4897f26d4be04',
+  DOLPHIN: '1415d2c543e34bb88ede94d79b9427691fc9be72daad8831a9ef297180546e18',
+  AMMONITE: 'a074a7bd976fe6aba1624161793be547d54c835cf422243a851ba09d1e650553',
+  FLYING_FISH: 'b8b1bc70136d620a822d08dfc2b04abe927e1c432b256139624b00c7bf4d3c1e',
+  MEGALODON: 'a94ae433b301c7fb7c68cba625b0bd36b0b14190f20e34a7c8ee0d9de06d53b9',
+  BABY_YETI: 'ef9f6a57d8f686fedd5185d178550913f48f91b57c9162d70d368b1fd9fe2b52',
+  BLUE_WHALE: '9ee72d3435c183dbdda2290cc8fcc9054b6e4d6e8f5338db4f4c1d9a30854b5d',
+  SQUID: '01433be242366af126da434b8735df1eb5b3cb2cede39145974e9c483607bac',
+  PENGUIN: '37534e97f36e5a8335928e171ec99608bee7fb16e260afb301025b3b17eeefc4',
+  JADE_DRAGON: '4099589796de185787ab92c3066d0d0af832ffad7153a42bb2e2d23598e7ea60',
+  GOLDEN_DRAGON: '2e9f9b1fc014166cb46a093e5349b2bf6edd201b680d62e48dbf3af9b0459116',
+  GUARDIAN: '221025434045bda7025b3e514b316a4b770c6faa4ba9adb4be3809526db77f9d',
+  GHOUL: '1e1109bbd1f82c182363ed53b624b688924447f9f68b929674ad37f3cef762a8',
+  REINDEER: 'a2df65c6fd19a58bee38252192ac7ce2cf1dc8632c3547a9228b6b697240d098',
+  BAL: 'c469ba2047122e0a2de3c7437ad3dd5d31f1ac2d27abde9f8841e1d92a8c5b75',
+  BLACK_CAT: '8282b5a9bbe2cd3223724023cd4f6ad413f5bb9e0edef81700b8afc3072d04a5',
+  BLAZE: 'b78ef2e4cf2c41a2d14bfde9caff10219f5b1bf5b35a49eb51c6467882cb5f0',
+  GRANDMA_WOLF: '4e794274c1bb197ad306540286a7aa952974f5661bccf2b725424f6ed79c7884',
+  SILVERFISH: '811a1173af3bead305e6339f555662e990d5faadb87e07299fa68ca828a6d2fb',
 };
 
 const FISHING_PET_TYPES = new Set([
@@ -28,6 +55,8 @@ const FISHING_PET_TYPES = new Set([
   'PENGUIN',
   'BLUE_WHALE',
   'BABY_YETI',
+  'GUARDIAN',
+  'GHOUL',
   'REINDEER',
 ]);
 
@@ -72,8 +101,11 @@ export function formatPetItem(pet) {
     .join(' ');
   const tier = (pet.tier || 'LEGENDARY').toUpperCase();
   const level = calculatePetLevel(pet.exp || 0);
+  const key = rawType.toLowerCase();
   const hash = PET_SKIN_HASHES[rawType] || PET_SKIN_HASHES.DOLPHIN;
-  const texture = `https://mc-heads.net/head/${hash}`;
+  const texture = KNOWN_LOCAL_PETS.has(key)
+    ? `/assets/minecraft/pets/${key}.png`
+    : `https://skinrender.dev/render/texture:${hash}/head`;
 
   let scc = 0;
   let fishingSpeed = 0;
