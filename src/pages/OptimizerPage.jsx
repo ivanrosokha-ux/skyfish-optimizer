@@ -4,6 +4,40 @@ import { usePlayerStore } from '../store/usePlayerStore';
 import { fetchBazaarSummary } from '../services/api';
 import styles from './OptimizerPage.module.css';
 
+function getRarityColorClass(rarity) {
+  switch ((rarity || '').toUpperCase()) {
+    case 'MYTHIC':
+      return styles.colorMythic;
+    case 'LEGENDARY':
+      return styles.colorLegendary;
+    case 'EPIC':
+      return styles.colorEpic;
+    case 'RARE':
+      return styles.colorRare;
+    case 'UNCOMMON':
+      return styles.colorUncommon;
+    default:
+      return styles.colorCommon;
+  }
+}
+
+function getRarityGlowClass(rarity) {
+  switch ((rarity || '').toUpperCase()) {
+    case 'MYTHIC':
+      return styles.glowMythic;
+    case 'LEGENDARY':
+      return styles.glowLegendary;
+    case 'EPIC':
+      return styles.glowEpic;
+    case 'RARE':
+      return styles.glowRare;
+    case 'UNCOMMON':
+      return styles.glowUncommon;
+    default:
+      return styles.glowCommon;
+  }
+}
+
 export default function OptimizerPage() {
   const { username, profile, stats } = usePlayerStore();
   const {
@@ -72,6 +106,27 @@ export default function OptimizerPage() {
               onClick={() => setTargetStat(stat)}
               className={targetStat === stat ? styles.statBtnActive : styles.statBtn}
             >
+              {stat === 'SCC' && (
+                <img
+                  src="/assets/minecraft/icons/scc.png"
+                  className={styles.filterChipIcon}
+                  alt=""
+                />
+              )}
+              {stat === 'Fishing Speed' && (
+                <img
+                  src="/assets/minecraft/icons/fishing_speed.png"
+                  className={styles.filterChipIcon}
+                  alt=""
+                />
+              )}
+              {stat === 'Mixed' && (
+                <img
+                  src="/assets/minecraft/icons/rod.png"
+                  className={styles.filterChipIcon}
+                  alt=""
+                />
+              )}
               {stat}
             </button>
           ))}
@@ -79,17 +134,24 @@ export default function OptimizerPage() {
         </div>
 
         <div className={styles.filterChips}>
-          {['Enchantments', 'Armor', 'Reforges', 'Pet', 'Accessory'].map((filter) => {
-            const isSelected = selectedFilters.includes(filter);
+          {[
+            { name: 'Enchantments', icon: '/assets/minecraft/icons/enchanted_book.png' },
+            { name: 'Armor', icon: '/assets/minecraft/diamond_chestplate.png' },
+            { name: 'Reforges', icon: '/assets/minecraft/icons/scc.png' },
+            { name: 'Pet', icon: '/assets/minecraft/pets/dolphin.png' },
+            { name: 'Accessory', icon: '/assets/minecraft/necklace.png' },
+          ].map((filter) => {
+            const isSelected = selectedFilters.includes(filter.name);
             return (
               <button
-                key={filter}
+                key={filter.name}
                 type="button"
-                onClick={() => toggleFilter(filter)}
+                onClick={() => toggleFilter(filter.name)}
                 className={isSelected ? styles.filterChipActive : styles.filterChip}
               >
+                <img src={filter.icon} alt="" className={styles.filterChipIcon} />
                 {isSelected && <span>✓ </span>}
-                {filter}
+                {filter.name}
               </button>
             );
           })}
@@ -124,13 +186,65 @@ export default function OptimizerPage() {
                   {rankedUpgrades.map((u) => (
                     <tr key={u.id || u.name} className={styles.tr}>
                       <td className={styles.td}>
-                        <div className={styles.upgradeName}>{u.name}</div>
-                        <div className={styles.upgradeNote}>{u.note}</div>
+                        <div className={styles.upgradeItemRow}>
+                          <div
+                            className={`${styles.upgradeIconSlot} ${getRarityGlowClass(u.rarity)}`}
+                          >
+                            <img
+                              src={u.texture || '/assets/minecraft/icons/rod.png'}
+                              alt={u.name}
+                              className={styles.upgradeItemTexture}
+                            />
+                          </div>
+                          <div className={styles.upgradeItemDetails}>
+                            <div className={styles.upgradeTitleRow}>
+                              <span
+                                className={`${styles.upgradeName} ${getRarityColorClass(u.rarity)}`}
+                              >
+                                {u.name}
+                              </span>
+                              {u.wikiUrl && (
+                                <a
+                                  href={u.wikiUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className={styles.wikiBadgeLink}
+                                  title={`Переглянути ${u.name} на офіційній Hypixel SkyBlock Wiki`}
+                                >
+                                  Wiki ↗
+                                </a>
+                              )}
+                              {u.liveMarket && (
+                                <span className={styles.bazaarPillBadge} title={u.marketSource}>
+                                  ● Bazaar
+                                </span>
+                              )}
+                            </div>
+                            <div className={styles.upgradeNote}>{u.note}</div>
+                          </div>
+                        </div>
                       </td>
-                      <td className={`${styles.td} ${styles.typeText}`}>{u.type}</td>
-                      <td className={`${styles.td} ${styles.gainVal}`}>{u.displayGain}</td>
+                      <td className={`${styles.td} ${styles.typeText}`}>
+                        <span className={styles.categoryBadge}>{u.type}</span>
+                      </td>
+                      <td className={`${styles.td} ${styles.gainVal}`}>
+                        <span
+                          className={
+                            u.statType === 'speed' ? styles.statBadgeSpeed : styles.statBadgeSCC
+                          }
+                        >
+                          {u.displayGain}
+                        </span>
+                      </td>
                       <td className={`${styles.td} ${styles.priceVal}`}>
-                        {u.price.toLocaleString()}
+                        <div className={styles.priceRow}>
+                          <img
+                            src="/assets/minecraft/icons/coin.png"
+                            alt="Coins"
+                            className={styles.coinPixelIcon}
+                          />
+                          <span>{u.price.toLocaleString()}</span>
+                        </div>
                       </td>
                       <td className={`${styles.td} ${styles.tdRight} ${styles.costVal}`}>
                         {u.costPerStat}
@@ -160,21 +274,38 @@ export default function OptimizerPage() {
 
           {bazaarPrices && (
             <div className={styles.bazaarTicker}>
-              <span className={styles.bazaarTag}>🟢 Hypixel Bazaar Live:</span>
+              <span className={styles.bazaarTag}>
+                <span className={styles.livePulseDot} /> Hypixel Bazaar Live:
+              </span>
               <span className={styles.bazaarItem}>
-                🦈 Shark Fin: ~
+                <img
+                  src="/assets/minecraft/icons/shard.png"
+                  alt=""
+                  className={styles.tickerPixelIcon}
+                />
+                Shark Fin: ~
                 {Math.round(bazaarPrices.ENCHANTED_SHARK_FIN?.buyPrice || 58999).toLocaleString()}{' '}
                 coins
               </span>
               <span>·</span>
               <span className={styles.bazaarItem}>
-                🧽 Wet Sponge: ~
+                <img
+                  src="/assets/minecraft/icons/nautilus.png"
+                  alt=""
+                  className={styles.tickerPixelIcon}
+                />
+                Wet Sponge: ~
                 {Math.round(bazaarPrices.ENCHANTED_WET_SPONGE?.buyPrice || 80199).toLocaleString()}{' '}
                 coins
               </span>
               <span>·</span>
               <span className={styles.bazaarItem}>
-                🦷 Tiger Tooth: ~
+                <img
+                  src="/assets/minecraft/icons/bone.png"
+                  alt=""
+                  className={styles.tickerPixelIcon}
+                />
+                Tiger Tooth: ~
                 {Math.round(bazaarPrices.TIGER_SHARK_TOOTH?.buyPrice || 123980).toLocaleString()}{' '}
                 coins
               </span>
@@ -281,7 +412,12 @@ export default function OptimizerPage() {
             </div>
             {budgetAllocation.selectedItems.map((item) => (
               <div key={item.id || item.name} className={styles.rowBetween}>
-                <span>{item.name}</span>
+                <div className={styles.purchaseItemLeft}>
+                  {item.texture && (
+                    <img src={item.texture} alt="" className={styles.purchaseMiniIcon} />
+                  )}
+                  <span>{item.name}</span>
+                </div>
                 <span className={styles.priceVal}>{item.cost.toLocaleString()}</span>
               </div>
             ))}

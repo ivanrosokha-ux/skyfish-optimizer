@@ -438,4 +438,251 @@
 
 .bazaarItem {
   white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+/* ==========================================================================
+   Optimizer Items, Pixel Art & Rarity Styling
+   ========================================================================== */
+
+.upgradeItemRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.upgradeIconSlot {
+  width: 36px;
+  height: 36px;
+  background-color: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.6);
+  transition: transform 0.15s ease;
+}
+
+.upgradeIconSlot:hover {
+  transform: scale(1.08);
+}
+
+.upgradeItemTexture {
+  width: 24px;
+  height: 24px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+.upgradeItemDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.upgradeTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.wikiBadgeLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  background-color: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  color: #94a3b8;
+  font-size: 0.625rem;
+  padding: 0.1rem 0.35rem;
+  border-radius: 0.25rem;
+  text-decoration: none;
+  font-family: var(--font-mono);
+  transition: all 0.15s ease;
+}
+
+.wikiBadgeLink:hover {
+  background-color: rgba(56, 189, 248, 0.15);
+  border-color: #38bdf8;
+  color: #38bdf8;
+}
+
+.bazaarPillBadge {
+  background-color: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #4ade80;
+  font-size: 0.625rem;
+  padding: 0.1rem 0.35rem;
+  border-radius: 0.25rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
+.categoryBadge {
+  display: inline-block;
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.375rem;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+}
+
+.statBadgeSCC {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  background-color: rgba(45, 212, 191, 0.12);
+  border: 1px solid rgba(45, 212, 191, 0.3);
+  color: #2dd4bf;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.375rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.6875rem;
+}
+
+.statBadgeSpeed {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  background-color: rgba(103, 232, 249, 0.12);
+  border: 1px solid rgba(103, 232, 249, 0.3);
+  color: #67e8f9;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.375rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.6875rem;
+}
+
+.priceRow {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.coinPixelIcon {
+  width: 14px;
+  height: 14px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  flex-shrink: 0;
+}
+
+.filterChipIcon {
+  width: 15px;
+  height: 15px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  flex-shrink: 0;
+}
+
+.tickerPixelIcon {
+  width: 16px;
+  height: 16px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  flex-shrink: 0;
+}
+
+.livePulseDot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #22c55e;
+  box-shadow: 0 0 8px #22c55e;
+  margin-right: 0.25rem;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.85);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.purchaseItemLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.purchaseMiniIcon {
+  width: 18px;
+  height: 18px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  flex-shrink: 0;
+}
+
+/* Rarity Colors */
+.colorCommon {
+  color: #ffffff;
+}
+
+.colorUncommon {
+  color: #55ff55;
+}
+
+.colorRare {
+  color: #5555ff;
+}
+
+.colorEpic {
+  color: #aa00aa;
+}
+
+.colorLegendary {
+  color: #ffaa00;
+}
+
+.colorMythic {
+  color: #ff55ff;
+}
+
+/* Rarity Glow Borders */
+.glowCommon {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.glowUncommon {
+  border-color: rgba(85, 255, 85, 0.35);
+  box-shadow: 0 0 8px rgba(85, 255, 85, 0.15);
+}
+
+.glowRare {
+  border-color: rgba(85, 85, 255, 0.35);
+  box-shadow: 0 0 8px rgba(85, 85, 255, 0.15);
+}
+
+.glowEpic {
+  border-color: rgba(170, 0, 170, 0.4);
+  box-shadow: 0 0 8px rgba(170, 0, 170, 0.2);
+}
+
+.glowLegendary {
+  border-color: rgba(255, 170, 0, 0.45);
+  box-shadow: 0 0 10px rgba(255, 170, 0, 0.25);
+}
+
+.glowMythic {
+  border-color: rgba(255, 85, 255, 0.5);
+  box-shadow: 0 0 12px rgba(255, 85, 255, 0.3);
 }

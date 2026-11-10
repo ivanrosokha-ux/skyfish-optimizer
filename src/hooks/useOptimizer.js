@@ -62,6 +62,10 @@ export function useOptimizer() {
       group: u.group,
       cost: u.price,
       gain: u.gain,
+      texture: u.texture,
+      rarity: u.rarity,
+      wikiUrl: u.wikiUrl,
+      note: u.note,
     }));
 
     const result = solveKnapsackBudget(knapsackItems, budget);
