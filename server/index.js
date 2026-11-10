@@ -4,6 +4,7 @@ import authRoutes from './routes/authRoutes.js';
 import playerRoutes from './routes/playerRoutes.js';
 import upgradesRoutes from './routes/upgradesRoutes.js';
 import buildsRoutes from './routes/buildsRoutes.js';
+import bazaarRoutes from './routes/bazaarRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -34,6 +35,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/player', playerRoutes);
 app.use('/api/upgrades', upgradesRoutes);
 app.use('/api/builds', buildsRoutes);
+app.use('/api/bazaar', bazaarRoutes);
 
 // 404 fallback for undefined routes
 app.use((req, res) => {
