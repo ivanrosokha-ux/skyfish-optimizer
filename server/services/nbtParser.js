@@ -80,6 +80,28 @@ export function getItemTexture(item, slotHint = '') {
     return '/assets/minecraft/iron_boots.png';
   }
 
+  // Equipment slots: Necklace, Cloak, Belt, Gloves
+  if (
+    slotHint === 'necklace' ||
+    /necklace|locket|pendant/i.test(name) ||
+    /necklace|locket/i.test(id)
+  ) {
+    return '/assets/minecraft/necklace.png';
+  }
+  if (slotHint === 'cloak' || /cloak|cape/i.test(name) || /cloak|cape/i.test(id)) {
+    return '/assets/minecraft/cloak.png';
+  }
+  if (slotHint === 'belt' || /belt|sash/i.test(name) || /belt|sash/i.test(id)) {
+    return '/assets/minecraft/belt.png';
+  }
+  if (
+    slotHint === 'gloves' ||
+    /gloves|grippers|gauntlet/i.test(name) ||
+    /gloves|grippers|gauntlet/i.test(id)
+  ) {
+    return '/assets/minecraft/gloves.png';
+  }
+
   return '/assets/minecraft/fishing_rod.png';
 }
 

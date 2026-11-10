@@ -8,10 +8,11 @@ const API_BASE = '/api';
 /**
  * Fetch player profile from Express backend
  */
-export async function fetchPlayerProfile(nickname = 'ReefRunner', profileName = 'Lime') {
+export async function fetchPlayerProfile(nickname = 'ReefRunner', profileName = 'Lime', signal) {
   try {
     const res = await fetch(
-      `${API_BASE}/player/${encodeURIComponent(nickname)}?profile=${encodeURIComponent(profileName)}`
+      `${API_BASE}/player/${encodeURIComponent(nickname)}?profile=${encodeURIComponent(profileName)}`,
+      { signal }
     );
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { renderMinecraftText } from '../../utils/minecraftText';
 import styles from './MinecraftItem.module.css';
@@ -11,6 +11,9 @@ export default function MinecraftItem({
   showTooltip = true,
 }) {
   const [hovered, setHovered] = useState(false);
+  const [pinned, setPinned] = useState(false);
+  const [tooltipPos, setTooltipPos] = useState('top');
+  const slotRef = useRef(null);
 
   if (!item) return null;
 
@@ -28,16 +31,52 @@ export default function MinecraftItem({
             ? '/assets/minecraft/diamond_leggings.png'
             : item.slot === 'boots'
               ? '/assets/minecraft/diamond_boots.png'
-              : '/assets/minecraft/fishing_rod.png';
+              : item.slot === 'necklace'
+                ? '/assets/minecraft/necklace.png'
+                : item.slot === 'cloak'
+                  ? '/assets/minecraft/cloak.png'
+                  : item.slot === 'belt'
+                    ? '/assets/minecraft/belt.png'
+                    : item.slot === 'gloves'
+                      ? '/assets/minecraft/gloves.png'
+                      : '/assets/minecraft/fishing_rod.png';
 
   const textureUrl = item.texture || fallbackTexture;
 
+  const handleMouseEnter = () => {
+    if (slotRef.current) {
+      const rect = slotRef.current.getBoundingClientRect();
+      // If element is in upper part of screen (< 360px from top), flip tooltip below the item
+      if (rect.top < 360) {
+        setTooltipPos('bottom');
+      } else {
+        setTooltipPos('top');
+      }
+    }
+    setHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setHovered(false);
+  };
+
+  const handleClick = (e) => {
+    if (onClick) {
+      onClick(e);
+    }
+    // Toggle pin on click so users can freeze the tooltip and scroll freely
+    setPinned((prev) => !prev);
+  };
+
+  const isVisible = showTooltip && (hovered || pinned) && (item.lore || item.name);
+
   return (
     <div
+      ref={slotRef}
       className={styles.slotWrapper}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      onClick={onClick}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onClick={handleClick}
     >
       <div className={`${styles.slot} ${sizeClass} ${activeClass}`}>
         <img
@@ -53,11 +92,15 @@ export default function MinecraftItem({
         />
       </div>
 
-      {/* Floating In-Game Minecraft Tooltip */}
-      {showTooltip && hovered && (item.lore || item.name) && (
-        <div className={styles.tooltip}>
+      {/* Floating In-Game Minecraft Tooltip (Scrollable up/down, viewport-adaptive) */}
+      {isVisible && (
+        <div
+          className={`${styles.tooltip} ${tooltipPos === 'bottom' ? styles.tooltipBottom : styles.tooltipTop}`}
+          onClick={(e) => e.stopPropagation()}
+        >
           <div className={styles.tooltipTitle}>
-            {renderMinecraftText(item.name || item.rawName)}
+            <span>{renderMinecraftText(item.name || item.rawName)}</span>
+            {pinned && <span className={styles.pinBadge}>📌 Закріплено</span>}
           </div>
           {Array.isArray(item.lore) && item.lore.length > 0 && (
             <div className={styles.tooltipLore}>

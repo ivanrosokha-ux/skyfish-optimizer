@@ -59,7 +59,6 @@
 /* Authentic Minecraft SkyBlock Tooltip */
 .tooltip {
   position: absolute;
-  bottom: calc(100% + 8px);
   left: 50%;
   transform: translateX(-50%);
   background-color: rgba(16, 12, 22, 0.98);
@@ -67,17 +66,43 @@
   outline: 2px solid #10081a;
   border-radius: 4px;
   padding: 10px 12px;
-  min-width: 240px;
-  max-width: 340px;
-  z-index: 100;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8);
-  pointer-events: none;
+  min-width: 250px;
+  max-width: 360px;
+  max-height: min(380px, 75vh);
+  overflow-y: auto;
+  pointer-events: auto;
+  z-index: 1000;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.9);
   font-family: var(--font-mono, monospace);
   font-size: 0.8125rem;
   line-height: 1.35;
   text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.9);
   white-space: normal;
   text-align: left;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-accent, #ff7a45) rgba(20, 14, 28, 0.95);
+}
+
+.tooltip::-webkit-scrollbar {
+  width: 6px;
+}
+
+.tooltip::-webkit-scrollbar-track {
+  background: rgba(20, 14, 28, 0.95);
+  border-radius: 3px;
+}
+
+.tooltip::-webkit-scrollbar-thumb {
+  background: var(--color-accent, #ff7a45);
+  border-radius: 3px;
+}
+
+.tooltipTop {
+  bottom: calc(100% + 8px);
+}
+
+.tooltipBottom {
+  top: calc(100% + 8px);
 }
 
 .tooltipTitle {
@@ -86,6 +111,15 @@
   margin-bottom: 6px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   padding-bottom: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pinBadge {
+  font-size: 0.625rem;
+  color: var(--color-gold, #fadb14);
+  font-weight: normal;
 }
 
 .tooltipLore {

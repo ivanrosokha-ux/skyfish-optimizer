@@ -76,29 +76,271 @@ export async function getPlayerProfile(req, res) {
       ],
     };
 
+    const defaultEquipPieces = [
+      {
+        id: 'mock_necklace',
+        name: 'Mangrove Locket',
+        rawName: 'Mangrove Locket',
+        slot: 'necklace',
+        rarity: 'RARE',
+        lore: ['Mangrove Locket', '§7Sea Creature Chance: §3+1%', '§7Fishing Speed: §b+5'],
+        stats: { scc: 1, fishingSpeed: 5, treasureChance: 0, fishingWisdom: 0 },
+        texture: '/assets/minecraft/necklace.png',
+      },
+      {
+        id: 'mock_cloak',
+        name: "Strengthened David's Cloak",
+        rawName: "Strengthened David's Cloak",
+        slot: 'cloak',
+        rarity: 'RARE',
+        lore: [
+          "Strengthened David's Cloak",
+          '§7Sea Creature Chance: §3+1%',
+          '§7Fishing Speed: §b+5',
+        ],
+        stats: { scc: 1, fishingSpeed: 5, treasureChance: 0, fishingWisdom: 0 },
+        texture: '/assets/minecraft/cloak.png',
+      },
+      {
+        id: 'mock_belt',
+        name: 'Moonglade Belt',
+        rawName: 'Moonglade Belt',
+        slot: 'belt',
+        rarity: 'RARE',
+        lore: ['Moonglade Belt', '§7Sea Creature Chance: §3+1%', '§7Fishing Speed: §b+5'],
+        stats: { scc: 1, fishingSpeed: 5, treasureChance: 0, fishingWisdom: 0 },
+        texture: '/assets/minecraft/belt.png',
+      },
+      {
+        id: 'mock_gloves',
+        name: 'Mangrove Grippers',
+        rawName: 'Mangrove Grippers',
+        slot: 'gloves',
+        rarity: 'RARE',
+        lore: ['Mangrove Grippers', '§7Sea Creature Chance: §3+1%', '§7Fishing Speed: §b+5'],
+        stats: { scc: 1, fishingSpeed: 5, treasureChance: 0, fishingWisdom: 0 },
+        texture: '/assets/minecraft/gloves.png',
+      },
+    ];
+
+    const finwaveEquipPieces = [
+      {
+        id: 'fin_necklace',
+        name: 'Ichthyic Necklace',
+        rawName: 'Ichthyic Necklace',
+        slot: 'necklace',
+        rarity: 'EPIC',
+        lore: ['§5Ichthyic Necklace', '§7Sea Creature Chance: §3+2.5%', '§7Fishing Speed: §b+12'],
+        stats: { scc: 2.5, fishingSpeed: 12, treasureChance: 1, fishingWisdom: 2 },
+        texture: '/assets/minecraft/necklace.png',
+      },
+      {
+        id: 'fin_cloak',
+        name: 'Finwave Cloak',
+        rawName: 'Finwave Cloak',
+        slot: 'cloak',
+        rarity: 'EPIC',
+        lore: ['§5Finwave Cloak', '§7Sea Creature Chance: §3+2.5%', '§7Fishing Speed: §b+12'],
+        stats: { scc: 2.5, fishingSpeed: 12, treasureChance: 1, fishingWisdom: 2 },
+        texture: '/assets/minecraft/cloak.png',
+      },
+      {
+        id: 'fin_belt',
+        name: 'Gillsplash Belt',
+        rawName: 'Gillsplash Belt',
+        slot: 'belt',
+        rarity: 'EPIC',
+        lore: ['§5Gillsplash Belt', '§7Sea Creature Chance: §3+2.5%', '§7Fishing Speed: §b+12'],
+        stats: { scc: 2.5, fishingSpeed: 12, treasureChance: 1, fishingWisdom: 2 },
+        texture: '/assets/minecraft/belt.png',
+      },
+      {
+        id: 'fin_gloves',
+        name: 'Glowstone Gauntlet',
+        rawName: 'Glowstone Gauntlet',
+        slot: 'gloves',
+        rarity: 'EPIC',
+        lore: ['§5Glowstone Gauntlet', '§7Sea Creature Chance: §3+2.5%', '§7Fishing Speed: §b+12'],
+        stats: { scc: 2.5, fishingSpeed: 12, treasureChance: 1, fishingWisdom: 2 },
+        texture: '/assets/minecraft/gloves.png',
+      },
+    ];
+
+    const mockArmorSets = [
+      {
+        id: 'set_equipped',
+        name: 'Equipped Armor Set',
+        pieces: defaultArmor,
+        totalSCC: 12,
+        totalSpeed: 40,
+      },
+      {
+        id: 'set_shark_scale',
+        name: 'Submerged Shark Scale Set',
+        pieces: [
+          {
+            id: 'mock_shark_helm',
+            rawName: 'Shark Scale Helmet',
+            name: '§6Shark Scale Helmet',
+            slot: 'helmet',
+            rarity: 'LEGENDARY',
+            texture: '/assets/minecraft/diamond_helmet.png',
+            stats: { scc: 3.4, fishingSpeed: 7.5 },
+            lore: ['§6Shark Scale Helmet', '§7Sea Creature Chance: §3+3.4%'],
+          },
+          {
+            id: 'mock_shark_chest',
+            rawName: 'Shark Scale Chestplate',
+            name: '§6Shark Scale Chestplate',
+            slot: 'chest',
+            rarity: 'LEGENDARY',
+            texture: '/assets/minecraft/diamond_chestplate.png',
+            stats: { scc: 3.4, fishingSpeed: 7.5 },
+            lore: ['§6Shark Scale Chestplate', '§7Sea Creature Chance: §3+3.4%'],
+          },
+          {
+            id: 'mock_shark_legs',
+            rawName: 'Shark Scale Leggings',
+            name: '§6Shark Scale Leggings',
+            slot: 'legs',
+            rarity: 'LEGENDARY',
+            texture: '/assets/minecraft/diamond_leggings.png',
+            stats: { scc: 3.4, fishingSpeed: 7.5 },
+            lore: ['§6Shark Scale Leggings', '§7Sea Creature Chance: §3+3.4%'],
+          },
+          {
+            id: 'mock_shark_boots',
+            rawName: 'Shark Scale Boots',
+            name: '§6Shark Scale Boots',
+            slot: 'boots',
+            rarity: 'LEGENDARY',
+            texture: '/assets/minecraft/diamond_boots.png',
+            stats: { scc: 3.4, fishingSpeed: 7.5 },
+            lore: ['§6Shark Scale Boots', '§7Sea Creature Chance: §3+3.4%'],
+          },
+        ],
+        totalSCC: 13.6,
+        totalSpeed: 30,
+      },
+      {
+        id: 'set_magma_lord',
+        name: 'Magma Lord Armor Set (Wardrobe)',
+        pieces: [
+          {
+            id: 'mock_magma_helm',
+            rawName: 'Magma Lord Head',
+            name: '§6Magma Lord Head',
+            slot: 'helmet',
+            rarity: 'LEGENDARY',
+            texture: '/assets/minecraft/diamond_helmet.png',
+            stats: { scc: 4.5, fishingSpeed: 12 },
+            lore: ['§6Magma Lord Head', '§7Sea Creature Chance: §3+4.5%'],
+          },
+          {
+            id: 'mock_magma_chest',
+            rawName: 'Magma Lord Chestplate',
+            name: '§6Magma Lord Chestplate',
+            slot: 'chest',
+            rarity: 'LEGENDARY',
+            texture: '/assets/minecraft/diamond_chestplate.png',
+            stats: { scc: 4.5, fishingSpeed: 12 },
+            lore: ['§6Magma Lord Chestplate', '§7Sea Creature Chance: §3+4.5%'],
+          },
+          {
+            id: 'mock_magma_legs',
+            rawName: 'Magma Lord Leggings',
+            name: '§6Magma Lord Leggings',
+            slot: 'legs',
+            rarity: 'LEGENDARY',
+            texture: '/assets/minecraft/diamond_leggings.png',
+            stats: { scc: 4.5, fishingSpeed: 12 },
+            lore: ['§6Magma Lord Leggings', '§7Sea Creature Chance: §3+4.5%'],
+          },
+          {
+            id: 'mock_magma_boots',
+            rawName: 'Magma Lord Boots',
+            name: '§6Magma Lord Boots',
+            slot: 'boots',
+            rarity: 'LEGENDARY',
+            texture: '/assets/minecraft/diamond_boots.png',
+            stats: { scc: 4.5, fishingSpeed: 12 },
+            lore: ['§6Magma Lord Boots', '§7Sea Creature Chance: §3+4.5%'],
+          },
+        ],
+        totalSCC: 18,
+        totalSpeed: 48,
+      },
+    ];
+
+    const mockEquipmentSets = [
+      {
+        id: 'equip_active',
+        name: 'Active Equipment (Standard)',
+        pieces: defaultEquipPieces,
+        totalSCC: 4,
+        totalSpeed: 20,
+      },
+      {
+        id: 'equip_finwave',
+        name: 'Finwave Fishing Equipment (+10% SCC)',
+        pieces: finwaveEquipPieces,
+        totalSCC: 10,
+        totalSpeed: 48,
+      },
+    ];
+
+    const mockRods = [
+      defaultRod,
+      {
+        id: 'rod_legends',
+        rawName: 'Rod of Legends',
+        name: '§6Rod of Legends',
+        slot: 'rod',
+        rarity: 'LEGENDARY',
+        lore: [
+          '§6Rod of Legends',
+          '§7Fishing Speed: §b+70',
+          '§7Sea Creature Chance: §3+12%',
+          '§6§lLEGENDARY FISHING ROD',
+        ],
+        stats: { scc: 12, fishingSpeed: 70, treasureChance: 2, fishingWisdom: 0 },
+        texture: '/assets/minecraft/fishing_rod.png',
+      },
+      {
+        id: 'rod_lava',
+        rawName: 'Chomp Starter Lava Rod',
+        name: '§9Chomp Starter Lava Rod',
+        slot: 'rod',
+        rarity: 'RARE',
+        lore: [
+          '§9Chomp Starter Lava Rod',
+          '§7Fishing Speed: §b+45',
+          '§7Sea Creature Chance: §3+5%',
+          '§9§lRARE FISHING ROD',
+        ],
+        stats: { scc: 5, fishingSpeed: 45, treasureChance: 1, fishingWisdom: 0 },
+        texture: '/assets/minecraft/fishing_rod.png',
+      },
+    ];
+
     return res.json({
       success: true,
       username: localPlayer.username,
       profile: matchedProfileName,
       profilesList: Object.keys(localPlayer.profiles),
-      armorSets: [
-        {
-          id: 'set_equipped',
-          name: 'Equipped Armor Set',
-          pieces: defaultArmor,
-          totalSCC: 12,
-          totalSpeed: 40,
-        },
-      ],
-      allRods: [defaultRod],
+      armorSets: mockArmorSets,
+      equipmentSets: mockEquipmentSets,
+      allRods: mockRods,
       fishingPets: [defaultPet],
       activeEquipment: {
         selectedArmorSetId: 'set_equipped',
+        selectedEquipmentSetId: 'equip_active',
         selectedRodId: defaultRod.id,
         selectedPetId: defaultPet.id,
       },
       ...data,
       armor: defaultArmor,
+      equipment: defaultEquipPieces,
       rod: defaultRod,
       pet: defaultPet,
     });
@@ -282,18 +524,183 @@ export async function getPlayerProfile(req, res) {
             });
           }
 
-          // 2.5 Extract all fishing pets
+          // Always add Magma Lord Set to armor sets for gear exploration
+          armorSets.push({
+            id: 'set_magma_lord',
+            name: 'Magma Lord Armor Set (Wardrobe)',
+            pieces: [
+              {
+                id: 'magma_helm',
+                rawName: 'Magma Lord Head',
+                name: '§6Magma Lord Head',
+                slot: 'helmet',
+                rarity: 'LEGENDARY',
+                texture: '/assets/minecraft/diamond_helmet.png',
+                stats: { scc: 4.5, fishingSpeed: 12 },
+                lore: ['§6Magma Lord Head', '§7Sea Creature Chance: §3+4.5%'],
+              },
+              {
+                id: 'magma_chest',
+                rawName: 'Magma Lord Chestplate',
+                name: '§6Magma Lord Chestplate',
+                slot: 'chest',
+                rarity: 'LEGENDARY',
+                texture: '/assets/minecraft/diamond_chestplate.png',
+                stats: { scc: 4.5, fishingSpeed: 12 },
+                lore: ['§6Magma Lord Chestplate', '§7Sea Creature Chance: §3+4.5%'],
+              },
+              {
+                id: 'magma_legs',
+                rawName: 'Magma Lord Leggings',
+                name: '§6Magma Lord Leggings',
+                slot: 'legs',
+                rarity: 'LEGENDARY',
+                texture: '/assets/minecraft/diamond_leggings.png',
+                stats: { scc: 4.5, fishingSpeed: 12 },
+                lore: ['§6Magma Lord Leggings', '§7Sea Creature Chance: §3+4.5%'],
+              },
+              {
+                id: 'magma_boots',
+                rawName: 'Magma Lord Boots',
+                name: '§6Magma Lord Boots',
+                slot: 'boots',
+                rarity: 'LEGENDARY',
+                texture: '/assets/minecraft/diamond_boots.png',
+                stats: { scc: 4.5, fishingSpeed: 12 },
+                lore: ['§6Magma Lord Boots', '§7Sea Creature Chance: §3+4.5%'],
+              },
+            ],
+            totalSCC: 18,
+            totalSpeed: 48,
+          });
+
+          // 2.5 Parse Equipment (Necklace, Cloak, Belt, Gloves)
+          const rawEquip = await parseNbtBuffer(memberData?.inventory?.equipment_contents?.data);
+          const equipSlots = ['necklace', 'cloak', 'belt', 'gloves'];
+          const liveEquipPieces = rawEquip.map((it, idx) =>
+            formatSkyblockItem(it, equipSlots[idx] || 'equipment')
+          );
+
+          const liveNecklace = liveEquipPieces[0] || {
+            id: 'live_necklace',
+            name: 'Mangrove Locket',
+            rawName: 'Mangrove Locket',
+            slot: 'necklace',
+            rarity: 'RARE',
+            stats: { scc: 1, fishingSpeed: 5 },
+            texture: '/assets/minecraft/necklace.png',
+            lore: ['Mangrove Locket', '§7Equipped Necklace'],
+          };
+          const liveCloak = liveEquipPieces[1] || {
+            id: 'live_cloak',
+            name: "Strengthened David's Cloak",
+            rawName: "Strengthened David's Cloak",
+            slot: 'cloak',
+            rarity: 'RARE',
+            stats: { scc: 1, fishingSpeed: 5 },
+            texture: '/assets/minecraft/cloak.png',
+            lore: ["Strengthened David's Cloak", '§7Equipped Cloak'],
+          };
+          const liveBelt = liveEquipPieces[2] || {
+            id: 'live_belt',
+            name: 'Moonglade Belt',
+            rawName: 'Moonglade Belt',
+            slot: 'belt',
+            rarity: 'RARE',
+            stats: { scc: 1, fishingSpeed: 5 },
+            texture: '/assets/minecraft/belt.png',
+            lore: ['Moonglade Belt', '§7Equipped Belt'],
+          };
+          const liveGloves = liveEquipPieces[3] || {
+            id: 'live_gloves',
+            name: 'Mangrove Grippers',
+            rawName: 'Mangrove Grippers',
+            slot: 'gloves',
+            rarity: 'RARE',
+            stats: { scc: 1, fishingSpeed: 5 },
+            texture: '/assets/minecraft/gloves.png',
+            lore: ['Mangrove Grippers', '§7Equipped Grippers'],
+          };
+
+          const equippedEquipSet = {
+            id: 'equip_active',
+            name: 'Active Equipment (Equipped)',
+            pieces: [liveNecklace, liveCloak, liveBelt, liveGloves],
+            totalSCC:
+              (liveNecklace.stats?.scc || 0) +
+              (liveCloak.stats?.scc || 0) +
+              (liveBelt.stats?.scc || 0) +
+              (liveGloves.stats?.scc || 0),
+            totalSpeed:
+              (liveNecklace.stats?.fishingSpeed || 0) +
+              (liveCloak.stats?.fishingSpeed || 0) +
+              (liveBelt.stats?.fishingSpeed || 0) +
+              (liveGloves.stats?.fishingSpeed || 0),
+          };
+
+          const finwaveEquipSet = {
+            id: 'equip_finwave',
+            name: 'Finwave Fishing Equipment (+10% SCC)',
+            pieces: [
+              {
+                id: 'fin_necklace',
+                name: '§5Ichthyic Necklace',
+                rawName: 'Ichthyic Necklace',
+                slot: 'necklace',
+                rarity: 'EPIC',
+                stats: { scc: 2.5, fishingSpeed: 12 },
+                texture: '/assets/minecraft/necklace.png',
+                lore: ['§5Ichthyic Necklace', '§7Sea Creature Chance: §3+2.5%'],
+              },
+              {
+                id: 'fin_cloak',
+                name: '§5Finwave Cloak',
+                rawName: 'Finwave Cloak',
+                slot: 'cloak',
+                rarity: 'EPIC',
+                stats: { scc: 2.5, fishingSpeed: 12 },
+                texture: '/assets/minecraft/cloak.png',
+                lore: ['§5Finwave Cloak', '§7Sea Creature Chance: §3+2.5%'],
+              },
+              {
+                id: 'fin_belt',
+                name: '§5Gillsplash Belt',
+                rawName: 'Gillsplash Belt',
+                slot: 'belt',
+                rarity: 'EPIC',
+                stats: { scc: 2.5, fishingSpeed: 12 },
+                texture: '/assets/minecraft/belt.png',
+                lore: ['§5Gillsplash Belt', '§7Sea Creature Chance: §3+2.5%'],
+              },
+              {
+                id: 'fin_gloves',
+                name: '§5Glowstone Gauntlet',
+                rawName: 'Glowstone Gauntlet',
+                slot: 'gloves',
+                rarity: 'EPIC',
+                stats: { scc: 2.5, fishingSpeed: 12 },
+                texture: '/assets/minecraft/gloves.png',
+                lore: ['§5Glowstone Gauntlet', '§7Sea Creature Chance: §3+2.5%'],
+              },
+            ],
+            totalSCC: 10,
+            totalSpeed: 48,
+          };
+          const equipmentSets = [equippedEquipSet, finwaveEquipSet];
+
+          // 2.6 Extract all fishing pets
           const fishingPets = extractFishingPets(memberData?.pets_data?.pets || []);
           const activePet = fishingPets.find((p) => p.active) || fishingPets[0];
           const activeRod = allRods[0];
 
-          // 2.6 Calculate combined stats with active gear
+          // 2.7 Calculate combined stats with active gear
           const calculatedSCC = Math.min(
             100,
             Math.round(
               50 +
                 fishingLevel * 0.4 +
                 (equippedArmorSet.totalSCC || 0) +
+                (equippedEquipSet.totalSCC || 0) +
                 (activeRod.stats?.scc || 0) +
                 (activePet.stats?.scc || 0)
             )
@@ -305,6 +712,7 @@ export async function getPlayerProfile(req, res) {
               140 +
                 fishingLevel * 1.2 +
                 (equippedArmorSet.totalSpeed || 0) +
+                (equippedEquipSet.totalSpeed || 0) +
                 (activeRod.stats?.fishingSpeed || 0) +
                 (activePet.stats?.fishingSpeed || 0)
             )
@@ -321,10 +729,12 @@ export async function getPlayerProfile(req, res) {
             profilesList: profileNames,
             source: 'Hypixel Public API (Live)',
             armorSets,
+            equipmentSets,
             allRods,
             fishingPets,
             activeEquipment: {
               selectedArmorSetId: equippedArmorSet.id,
+              selectedEquipmentSetId: equippedEquipSet.id,
               selectedRodId: activeRod.id,
               selectedPetId: activePet.id,
             },
@@ -340,6 +750,7 @@ export async function getPlayerProfile(req, res) {
               rawExp,
             },
             armor: equippedArmorSet.pieces,
+            equipment: equippedEquipSet.pieces,
             rod: activeRod,
             pet: activePet,
           });
@@ -390,6 +801,49 @@ export async function getPlayerProfile(req, res) {
     },
   ];
 
+  const fallbackEquipPieces = [
+    {
+      id: 'fb_necklace',
+      name: 'Mangrove Locket',
+      rawName: 'Mangrove Locket',
+      slot: 'necklace',
+      rarity: 'RARE',
+      stats: { scc: 1, fishingSpeed: 5 },
+      texture: '/assets/minecraft/necklace.png',
+      lore: ['Mangrove Locket', '§7Equipped Necklace'],
+    },
+    {
+      id: 'fb_cloak',
+      name: "Strengthened David's Cloak",
+      rawName: "Strengthened David's Cloak",
+      slot: 'cloak',
+      rarity: 'RARE',
+      stats: { scc: 1, fishingSpeed: 5 },
+      texture: '/assets/minecraft/cloak.png',
+      lore: ["Strengthened David's Cloak", '§7Equipped Cloak'],
+    },
+    {
+      id: 'fb_belt',
+      name: 'Moonglade Belt',
+      rawName: 'Moonglade Belt',
+      slot: 'belt',
+      rarity: 'RARE',
+      stats: { scc: 1, fishingSpeed: 5 },
+      texture: '/assets/minecraft/belt.png',
+      lore: ['Moonglade Belt', '§7Equipped Belt'],
+    },
+    {
+      id: 'fb_gloves',
+      name: 'Mangrove Grippers',
+      rawName: 'Mangrove Grippers',
+      slot: 'gloves',
+      rarity: 'RARE',
+      stats: { scc: 1, fishingSpeed: 5 },
+      texture: '/assets/minecraft/gloves.png',
+      lore: ['Mangrove Grippers', '§7Equipped Grippers'],
+    },
+  ];
+
   const fallbackRod = {
     id: 'fallback_rod',
     name: 'Rod of the Sea',
@@ -427,11 +881,35 @@ export async function getPlayerProfile(req, res) {
         totalSCC: 12,
         totalSpeed: 40,
       },
+      {
+        id: 'set_shark',
+        name: 'Shark Scale Set (+13.6% SCC)',
+        pieces: fallbackArmor,
+        totalSCC: 13.6,
+        totalSpeed: 30,
+      },
+    ],
+    equipmentSets: [
+      {
+        id: 'equip_active',
+        name: 'Active Equipment (Standard)',
+        pieces: fallbackEquipPieces,
+        totalSCC: 4,
+        totalSpeed: 20,
+      },
+      {
+        id: 'equip_finwave',
+        name: 'Finwave Fishing Equipment (+10% SCC)',
+        pieces: fallbackEquipPieces,
+        totalSCC: 10,
+        totalSpeed: 48,
+      },
     ],
     allRods: [fallbackRod],
     fishingPets: [fallbackPet],
     activeEquipment: {
       selectedArmorSetId: 'set_equipped',
+      selectedEquipmentSetId: 'equip_active',
       selectedRodId: fallbackRod.id,
       selectedPetId: fallbackPet.id,
     },
@@ -446,6 +924,7 @@ export async function getPlayerProfile(req, res) {
       progressPercent: 42,
     },
     armor: fallbackArmor,
+    equipment: fallbackEquipPieces,
     rod: fallbackRod,
     pet: fallbackPet,
   });
