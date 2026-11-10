@@ -10,7 +10,6 @@ export function useAuth() {
   const error = useAuthStore((state) => state.error);
   const login = useAuthStore((state) => state.login);
   const register = useAuthStore((state) => state.register);
-  const demoLogin = useAuthStore((state) => state.demoLogin);
   const logout = useAuthStore((state) => state.logout);
   const clearError = useAuthStore((state) => state.clearError);
 
@@ -21,7 +20,6 @@ export function useAuth() {
     error,
     login,
     register,
-    demoLogin,
     logout,
     clearError,
   };

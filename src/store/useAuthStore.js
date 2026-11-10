@@ -12,7 +12,7 @@ function getInitialUser() {
   }
 }
 
-export const useAuthStore = create((set, get) => ({
+export const useAuthStore = create((set) => ({
   user: getInitialUser(),
   isLoading: false,
   error: null,
@@ -53,10 +53,6 @@ export const useAuthStore = create((set, get) => ({
       set({ error: msg, isLoading: false });
       return { success: false, error: msg };
     }
-  },
-
-  demoLogin: async () => {
-    return get().login('player@hypixel.net', 'demo1234');
   },
 
   logout: () => {

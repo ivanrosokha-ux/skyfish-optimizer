@@ -40,6 +40,8 @@ describe('SkyFish Optimizer - Client-Side Routing (React Router v6)', () => {
 
   it('performs programmatic navigation on login form submit', () => {
     cy.visit('/login');
+    cy.get('input[type="email"]').type('angler@example.com');
+    cy.get('input[type="password"]').type('password123');
     cy.contains('button', 'Log in').click();
     cy.url().should('include', '/account');
     cy.contains('Account details').should('be.visible');

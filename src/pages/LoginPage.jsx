@@ -5,21 +5,14 @@ import styles from './LoginPage.module.css';
 
 export default function LoginPage() {
   const [isRegister, setIsRegister] = useState(false);
-  const [email, setEmail] = useState('angler@example.com');
-  const [password, setPassword] = useState('password123');
-  const { user, isAuthenticated, login, register, demoLogin, logout, isLoading, error } = useAuth();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { user, isAuthenticated, login, register, logout, isLoading, error } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const result = isRegister ? await register(email, password) : await login(email, password);
-    if (result.success) {
-      navigate('/account');
-    }
-  };
-
-  const handleDemoLogin = async () => {
-    const result = await demoLogin();
     if (result.success) {
       navigate('/account');
     }
@@ -83,7 +76,7 @@ export default function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 className={styles.input}
-                placeholder="angler@example.com"
+                placeholder="your.email@example.com"
               />
             </div>
           </div>
@@ -108,16 +101,6 @@ export default function LoginPage() {
 
           <button type="submit" disabled={isLoading} className={styles.submitBtn}>
             {isLoading ? 'Зачекайте...' : isRegister ? 'Register' : 'Log in'}
-          </button>
-
-          <button
-            type="button"
-            onClick={handleDemoLogin}
-            disabled={isLoading}
-            className={styles.demoBtn}
-            title="Швидкий тестовий вхід без введення пароля"
-          >
-            ⚡ Quick Demo Sign-in (1 click)
           </button>
         </form>
 
