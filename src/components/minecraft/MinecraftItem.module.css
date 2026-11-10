@@ -1,0 +1,99 @@
+.slotWrapper {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+
+.slot {
+  width: 48px;
+  height: 48px;
+  background-color: #2b221d;
+  border: 2px solid #19120e;
+  border-top-color: #140e0b;
+  border-left-color: #140e0b;
+  border-bottom-color: #42352e;
+  border-right-color: #42352e;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.slot:hover {
+  background-color: #382c26;
+  border-color: var(--color-accent);
+}
+
+.slotActive {
+  background-color: #382c26;
+  border: 2px solid var(--color-accent);
+  box-shadow: 0 0 8px rgba(255, 122, 69, 0.4);
+}
+
+.slotSm {
+  width: 36px;
+  height: 36px;
+  padding: 3px;
+}
+
+.slotLg {
+  width: 60px;
+  height: 60px;
+  padding: 6px;
+}
+
+.texture {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+/* Authentic Minecraft SkyBlock Tooltip */
+.tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(16, 12, 22, 0.98);
+  border: 2px solid #2d1844;
+  outline: 2px solid #10081a;
+  border-radius: 4px;
+  padding: 10px 12px;
+  min-width: 240px;
+  max-width: 340px;
+  z-index: 100;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8);
+  pointer-events: none;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.8125rem;
+  line-height: 1.35;
+  text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.9);
+  white-space: normal;
+  text-align: left;
+}
+
+.tooltipTitle {
+  font-size: 0.875rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 4px;
+}
+
+.tooltipLore {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.loreLine {
+  min-height: 14px;
+}
