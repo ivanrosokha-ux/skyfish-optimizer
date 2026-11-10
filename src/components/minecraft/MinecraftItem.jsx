@@ -19,6 +19,8 @@ export default function MinecraftItem({
 
   const sizeClass = size === 'sm' ? styles.slotSm : size === 'lg' ? styles.slotLg : '';
   const activeClass = active ? styles.slotActive : '';
+  const rarityKey = (item.rarity || item.tier || '').toUpperCase();
+  const rarityClass = styles[`rarity${rarityKey}`] || '';
 
   const fallbackTexture =
     item.slot === 'rod'
@@ -78,7 +80,7 @@ export default function MinecraftItem({
       onMouseLeave={handleMouseLeave}
       onClick={handleClick}
     >
-      <div className={`${styles.slot} ${sizeClass} ${activeClass}`}>
+      <div className={`${styles.slot} ${sizeClass} ${activeClass} ${rarityClass}`}>
         <img
           src={textureUrl}
           alt={item.rawName || item.name}

@@ -131,3 +131,39 @@
 .loreLine {
   min-height: 18px;
 }
+
+/* SkyCrypt Rarity Glow Borders */
+.rarityCOMMON {
+  border-color: #aaaaaa;
+}
+
+.rarityUNCOMMON {
+  border-color: #55ff55;
+  box-shadow: 0 0 4px rgba(85, 255, 85, 0.3);
+}
+
+.rarityRARE {
+  border-color: #5555ff;
+  box-shadow: 0 0 6px rgba(85, 85, 255, 0.35);
+}
+
+.rarityEPIC {
+  border-color: #aa00aa;
+  box-shadow: 0 0 6px rgba(170, 0, 170, 0.4);
+}
+
+.rarityLEGENDARY {
+  border-color: #ffaa00;
+  box-shadow: 0 0 8px rgba(255, 170, 0, 0.45);
+}
+
+.rarityMYTHIC {
+  border-color: #ff55ff;
+  box-shadow: 0 0 8px rgba(255, 85, 255, 0.45);
+}
+
+.rarityDIVINE,
+.raritySPECIAL {
+  border-color: #ff5555;
+  box-shadow: 0 0 8px rgba(255, 85, 85, 0.45);
+}

@@ -24,10 +24,17 @@ const initialSavedBuilds = [
   },
 ];
 
+const getInitialUsername = () => {
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem('skyfish_saved_nickname') || 'ReefRunner';
+  }
+  return 'ReefRunner';
+};
+
 export const usePlayerStore = create(
   persist(
     (set) => ({
-      username: 'ReefRunner',
+      username: getInitialUsername(),
       profile: 'Lime',
       targetStat: 'SCC', // 'SCC' | 'Fishing Speed' | 'Mixed'
       budget: 5000000,

@@ -1,8 +1,56 @@
 import { players } from '../data/mockDb.js';
 import { fetchPlayerUuid } from '../services/mojangService.js';
-import { getPlayerSkyblockProfiles, calculateFishingLevel } from '../services/hypixelService.js';
+import { getPlayerSkyblockProfiles, calculateSkillLevel } from '../services/hypixelService.js';
 import { parseNbtBuffer, formatSkyblockItem } from '../services/nbtParser.js';
 import { extractFishingPets } from '../services/petsService.js';
+
+const SKILL_MAX_LEVELS = {
+  fishing: 50,
+  mining: 60,
+  farming: 60,
+  combat: 60,
+  enchanting: 60,
+  taming: 50,
+  alchemy: 50,
+  foraging: 50,
+};
+
+function buildSkillsList(expObj = {}) {
+  const definitions = [
+    { key: 'fishing', name: 'Fishing', icon: '🎣', defaultExp: 25000000, apiKey: 'SKILL_FISHING' },
+    { key: 'mining', name: 'Mining', icon: '⛏️', defaultExp: 55000000, apiKey: 'SKILL_MINING' },
+    { key: 'farming', name: 'Farming', icon: '🌾', defaultExp: 35000000, apiKey: 'SKILL_FARMING' },
+    { key: 'combat', name: 'Combat', icon: '⚔️', defaultExp: 75000000, apiKey: 'SKILL_COMBAT' },
+    {
+      key: 'enchanting',
+      name: 'Enchanting',
+      icon: '🔮',
+      defaultExp: 135372425,
+      apiKey: 'SKILL_ENCHANTING',
+    },
+    { key: 'taming', name: 'Taming', icon: '🦴', defaultExp: 40000000, apiKey: 'SKILL_TAMING' },
+    { key: 'alchemy', name: 'Alchemy', icon: '⚗️', defaultExp: 55172425, apiKey: 'SKILL_ALCHEMY' },
+    {
+      key: 'foraging',
+      name: 'Foraging',
+      icon: '🪓',
+      defaultExp: 10000000,
+      apiKey: 'SKILL_FORAGING',
+    },
+  ];
+
+  return definitions.map((def) => {
+    const rawExp = expObj[def.apiKey] !== undefined ? expObj[def.apiKey] : def.defaultExp;
+    const maxLevel = SKILL_MAX_LEVELS[def.key] || 50;
+    const info = calculateSkillLevel(rawExp, maxLevel);
+    return {
+      key: def.key,
+      name: def.name,
+      icon: def.icon,
+      ...info,
+    };
+  });
+}
 
 export async function getPlayerProfile(req, res) {
   const { nickname } = req.params;
@@ -246,12 +294,14 @@ export async function getPlayerProfile(req, res) {
     return res.json({
       success: true,
       username: localPlayer.username,
+      uuid: localPlayer.uuid || 'c06f89064c8a49119c29ea1dbd1aab82',
       profile: matchedProfileName,
       profilesList: Object.keys(localPlayer.profiles),
       armorSets: mockArmorSets,
       equipmentSets: mockEquipmentSets,
       allRods: mockRods,
       fishingPets: [defaultPet],
+      skills: buildSkillsList({ SKILL_FISHING: 25000000 }),
       activeEquipment: {
         selectedArmorSetId: 'set_equipped',
         selectedEquipmentSetId: 'equip_active',
@@ -283,11 +333,16 @@ export async function getPlayerProfile(req, res) {
 
           const memberData = activeProfile?.members?.[mojangData.uuid] || {};
 
-          // 2.1 Calculate Fishing Level
-          const rawExp = memberData?.player_data?.experience?.SKILL_FISHING || 0;
-          const { level: fishingLevel, progressPercent } = calculateFishingLevel(rawExp);
-
-          // 2.2 Currencies
+          // 2.1 Currencies & Skills
+          const skillsList = buildSkillsList(memberData?.player_data?.experience || {});
+          const fishingSkill = skillsList.find((s) => s.key === 'fishing') || {
+            level: 1,
+            progressPercent: 0,
+            rawExp: 0,
+          };
+          const fishingLevel = fishingSkill.level;
+          const progressPercent = fishingSkill.progressPercent;
+          const rawExp = fishingSkill.rawExp;
           const purse = Math.round(memberData?.currencies?.coin_purse || 0);
           const bank = Math.round(activeProfile?.banking?.balance || 0);
 
@@ -634,6 +689,7 @@ export async function getPlayerProfile(req, res) {
             equipmentSets,
             allRods,
             fishingPets,
+            skills: skillsList,
             activeEquipment: {
               selectedArmorSetId: equippedArmorSet.id,
               selectedEquipmentSetId: equippedEquipSet.id,
@@ -773,6 +829,7 @@ export async function getPlayerProfile(req, res) {
   return res.json({
     success: true,
     username: nickname,
+    uuid: '61637e2ed73445769e257e97652d8007',
     profile: profileName,
     profilesList: ['Lime', 'Coconut', 'Papaya'],
     armorSets: [
@@ -809,6 +866,7 @@ export async function getPlayerProfile(req, res) {
     ],
     allRods: [fallbackRod],
     fishingPets: [fallbackPet],
+    skills: buildSkillsList({}),
     activeEquipment: {
       selectedArmorSetId: 'set_equipped',
       selectedEquipmentSetId: 'equip_active',

@@ -123,32 +123,58 @@ export function decodeNbtItemNames(rawBase64) {
 }
 
 /**
- * Calculate SkyBlock fishing level from raw skill experience
+ * Calculate SkyBlock skill level and progress from raw experience
  */
-export function calculateFishingLevel(xp = 0) {
+export function calculateSkillLevel(xp = 0, maxLevel = 50) {
   const thresholds = [
     50, 175, 375, 675, 1175, 1925, 2925, 4425, 6425, 9925, 14925, 22425, 32425, 47425, 67425, 97425,
     147425, 222425, 322425, 522425, 822425, 1222425, 1722425, 2322425, 3022425, 3822425, 4722425,
     5722425, 6822425, 8022425, 9322425, 10722425, 12222425, 13822425, 15522425, 17322425, 19222425,
     21222425, 23322425, 25522425, 27822425, 30222425, 32722425, 35322425, 38072425, 40972425,
     44072425, 47472425, 51172425, 55172425,
+    // 51 - 60
+    59672425, 64672425, 70272425, 76572425, 83672425, 91672425, 100672425, 110872425, 122372425,
+    135372425,
   ];
 
+  const effectiveThresholds = thresholds.slice(0, maxLevel);
   let level = 0;
-  for (let i = 0; i < thresholds.length; i++) {
-    if (xp >= thresholds[i]) {
+  for (let i = 0; i < effectiveThresholds.length; i++) {
+    if (xp >= effectiveThresholds[i]) {
       level = i + 1;
     } else {
       break;
     }
   }
 
-  const prev = level === 0 ? 0 : thresholds[level - 1];
-  const next = level >= thresholds.length ? thresholds[thresholds.length - 1] : thresholds[level];
-  const progressPercent = Math.min(
-    100,
-    Math.max(0, Math.round(((xp - prev) / (next - prev || 1)) * 100))
-  );
+  const prev = level === 0 ? 0 : effectiveThresholds[level - 1];
+  const next =
+    level >= effectiveThresholds.length
+      ? effectiveThresholds[effectiveThresholds.length - 1]
+      : effectiveThresholds[level];
 
-  return { level: Math.max(1, level), progressPercent };
+  const progressPercent =
+    level >= maxLevel
+      ? 100
+      : Math.min(100, Math.max(0, Math.round(((xp - prev) / (next - prev || 1)) * 100)));
+
+  const maxThreshold = effectiveThresholds[effectiveThresholds.length - 1];
+  const totalProgressPercent = Math.min(100, Math.max(0, Math.round((xp / maxThreshold) * 100)));
+
+  return {
+    level: Math.max(1, Math.min(maxLevel, level)),
+    progressPercent,
+    totalProgressPercent,
+    xpCurrent: Math.max(0, Math.round(xp - prev)),
+    xpForNext: Math.max(0, Math.round(next - prev)),
+    rawExp: Math.round(xp),
+    maxLevel,
+  };
+}
+
+/**
+ * Calculate SkyBlock fishing level from raw skill experience (convenience alias)
+ */
+export function calculateFishingLevel(xp = 0) {
+  return calculateSkillLevel(xp, 50);
 }
