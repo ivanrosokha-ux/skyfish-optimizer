@@ -2,7 +2,6 @@ import { useEffect, useState, useRef } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { usePlayerProfile } from '../hooks/usePlayerProfile';
 import { usePlayerStore } from '../store/usePlayerStore';
-import { useAuth } from '../hooks/useAuth';
 import MinecraftItem from '../components/minecraft/MinecraftItem';
 import { renderMinecraftText } from '../utils/minecraftText';
 import styles from './ProfilePage.module.css';
@@ -10,9 +9,12 @@ import styles from './ProfilePage.module.css';
 export default function ProfilePage() {
   const { player } = useParams();
   const navigate = useNavigate();
-  const { stats } = usePlayerStore();
-  const { isAuthenticated } = useAuth();
-  const [showAuthNotice, setShowAuthNotice] = useState(!isAuthenticated);
+  const { username: savedUsername, profile: savedProfile, stats } = usePlayerStore();
+
+  const storedSavedNick =
+    typeof window !== 'undefined' ? localStorage.getItem('skyfish_saved_nickname') : null;
+  const targetNickname = player || storedSavedNick || savedUsername || 'ReefRunner';
+  const targetProfile = savedProfile || 'Lime';
 
   const {
     profileData,
@@ -22,7 +24,7 @@ export default function ProfilePage() {
     currentProfile,
     changeProfile,
     searchNickname,
-  } = usePlayerProfile(player || 'ReefRunner', 'Lime');
+  } = usePlayerProfile(targetNickname, targetProfile);
 
   const [searchInput, setSearchInput] = useState(player || currentUsername);
   const [activeGearTab, setActiveGearTab] = useState('gear');
@@ -278,34 +280,6 @@ export default function ProfilePage() {
 
   return (
     <div className={styles.container}>
-      {/* Optional Auth Notice banner when unauthenticated */}
-      {!isAuthenticated && showAuthNotice && (
-        <div className={styles.authNoticeCard}>
-          <div className={styles.authNoticeContent}>
-            <span className={styles.authNoticeIcon}>🔒</span>
-            <div>
-              <div className={styles.authNoticeTitle}>Авторизація SkyFish Optimizer</div>
-              <div className={styles.authNoticeDesc}>
-                Створіть безкоштовний акаунт або увійдіть, щоб зберігати білди, синхронізувати
-                спорядження та керувати кастомними сетами.
-              </div>
-            </div>
-          </div>
-          <div className={styles.authNoticeActions}>
-            <Link to="/login" className={styles.authRegisterBtn}>
-              Реєстрація / Вхід →
-            </Link>
-            <button
-              type="button"
-              onClick={() => setShowAuthNotice(false)}
-              className={styles.authGuestBtn}
-            >
-              Продовжити як гість
-            </button>
-          </div>
-        </div>
-      )}
-
       {/* Title */}
       <div>
         <h1 className={styles.title}>
@@ -390,36 +364,60 @@ export default function ProfilePage() {
 
           {activeGearTab === 'gear' && (
             <>
-              {/* Armor Set Selector */}
+              {/* Armor Sets Selector (Modern Set Cards UI) */}
               {armorSets.length > 0 && (
-                <div className={styles.gearSelectorRow}>
+                <div style={{ marginBottom: '1.25rem' }}>
                   <div className={styles.gearSelectorHeader}>
-                    <span className={styles.gearSelectorLabel}>Armor Set / Wardrobe</span>
+                    <span className={styles.gearSelectorLabel}>Armor Sets / Wardrobe</span>
                     <span className={styles.petBadgeGain}>
                       +{armorSCC}% SCC · +{armorSpeed} Speed
                     </span>
                   </div>
-                  <div className={styles.gearSelectorPills}>
+                  <div className={styles.setCardGrid}>
                     {armorSets.map((s) => (
-                      <button
+                      <div
                         key={s.id}
-                        type="button"
                         onClick={() => setSelectedArmorSetId(s.id)}
                         className={
-                          s.id === activeArmorSet?.id ? styles.gearPillActive : styles.gearPill
+                          s.id === activeArmorSet?.id ? styles.setCardActive : styles.setCard
                         }
                       >
-                        {s.id === activeArmorSet?.id && <span>✓ </span>}
-                        {s.name}
-                      </button>
+                        <div className={styles.setCardHeader}>
+                          <div className={styles.setCardTitleRow}>
+                            <span className={styles.setRadio}>
+                              {s.id === activeArmorSet?.id ? '●' : '○'}
+                            </span>
+                            <span className={styles.setCardName}>{s.name}</span>
+                          </div>
+                          <div className={styles.setCardBadges}>
+                            <span className={styles.badgeGain}>+{s.totalSCC}% SCC</span>
+                            <span className={styles.badgeSpeed}>+{s.totalSpeed} Spd</span>
+                          </div>
+                        </div>
+                        <div className={styles.setMiniPieces}>
+                          {s.pieces.map((p, pIdx) => (
+                            <div
+                              key={p.id || pIdx}
+                              className={styles.miniPieceSlot}
+                              title={p.rawName || p.name}
+                            >
+                              <img
+                                src={p.texture || '/assets/minecraft/diamond_chestplate.png'}
+                                alt={p.rawName || p.name}
+                                className={styles.miniTexture}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
                     ))}
                   </div>
                 </div>
               )}
 
-              {/* Equipment Set Selector */}
+              {/* Equipment Set Selector (Modern Set Cards UI) */}
               {equipmentSets.length > 0 && (
-                <div className={styles.gearSelectorRow}>
+                <div style={{ marginBottom: '1.25rem' }}>
                   <div className={styles.gearSelectorHeader}>
                     <span className={styles.gearSelectorLabel}>
                       Equipment Set (Necklace / Cloak / Belt / Gloves)
@@ -428,44 +426,83 @@ export default function ProfilePage() {
                       +{equipSCC}% SCC · +{equipSpeed} Speed
                     </span>
                   </div>
-                  <div className={styles.gearSelectorPills}>
+                  <div className={styles.setCardGrid}>
                     {equipmentSets.map((eq) => (
-                      <button
+                      <div
                         key={eq.id}
-                        type="button"
                         onClick={() => setSelectedEquipmentSetId(eq.id)}
                         className={
-                          eq.id === activeEquipmentSet?.id ? styles.gearPillActive : styles.gearPill
+                          eq.id === activeEquipmentSet?.id ? styles.setCardActive : styles.setCard
                         }
                       >
-                        {eq.id === activeEquipmentSet?.id && <span>✓ </span>}
-                        {eq.name}
-                      </button>
+                        <div className={styles.setCardHeader}>
+                          <div className={styles.setCardTitleRow}>
+                            <span className={styles.setRadio}>
+                              {eq.id === activeEquipmentSet?.id ? '●' : '○'}
+                            </span>
+                            <span className={styles.setCardName}>{eq.name}</span>
+                          </div>
+                          <div className={styles.setCardBadges}>
+                            <span className={styles.badgeGain}>+{eq.totalSCC}% SCC</span>
+                            <span className={styles.badgeSpeed}>+{eq.totalSpeed} Spd</span>
+                          </div>
+                        </div>
+                        <div className={styles.setMiniPieces}>
+                          {eq.pieces.map((p, pIdx) => (
+                            <div
+                              key={p.id || pIdx}
+                              className={styles.miniPieceSlot}
+                              title={p.rawName || p.name}
+                            >
+                              <img
+                                src={p.texture || '/assets/minecraft/necklace.png'}
+                                alt={p.rawName || p.name}
+                                className={styles.miniTexture}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
                     ))}
                   </div>
                 </div>
               )}
 
-              {/* Active Rod Selector */}
+              {/* Active Rod Selector (Modern Rod Cards UI) */}
               {allRods.length > 0 && (
-                <div className={styles.gearSelectorRow}>
+                <div style={{ marginBottom: '1.25rem' }}>
                   <div className={styles.gearSelectorHeader}>
                     <span className={styles.gearSelectorLabel}>Active Fishing Rod</span>
                     <span className={styles.petBadgeGain}>
                       +{rodSCC}% SCC · +{rodSpeed} Speed
                     </span>
                   </div>
-                  <div className={styles.gearSelectorPills}>
+                  <div className={styles.rodCardGrid}>
                     {allRods.map((r) => (
-                      <button
+                      <div
                         key={r.id}
-                        type="button"
                         onClick={() => setSelectedRodId(r.id)}
-                        className={r.id === activeRod?.id ? styles.gearPillActive : styles.gearPill}
+                        className={r.id === activeRod?.id ? styles.rodCardActive : styles.rodCard}
                       >
-                        {r.id === activeRod?.id && <span>✓ </span>}
-                        {r.rawName} (+{r.stats?.scc || 0}% SCC)
-                      </button>
+                        <div className={styles.miniPieceSlot}>
+                          <img
+                            src={r.texture || '/assets/minecraft/fishing_rod.png'}
+                            alt={r.rawName}
+                            className={styles.miniTexture}
+                          />
+                        </div>
+                        <div className={styles.rodCardInfo}>
+                          <div className={styles.rodCardName}>
+                            {renderMinecraftText(r.name || r.rawName)}
+                          </div>
+                          <div className={styles.rodCardStats}>
+                            +{r.stats?.scc || 0}% SCC · +{r.stats?.fishingSpeed || 0} Spd
+                          </div>
+                        </div>
+                        <span className={styles.setRadio}>
+                          {r.id === activeRod?.id ? '●' : '○'}
+                        </span>
+                      </div>
                     ))}
                   </div>
                 </div>

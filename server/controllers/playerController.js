@@ -169,106 +169,26 @@ export async function getPlayerProfile(req, res) {
     const mockArmorSets = [
       {
         id: 'set_equipped',
-        name: 'Equipped Armor Set',
+        name: `Equipped Set (${defaultArmor[0]?.rawName?.replace(/(Wise|Growth|Pure|Submerged)\s+/i, '') || 'Armor'})`,
+        category: 'Equipped',
         pieces: defaultArmor,
         totalSCC: 12,
         totalSpeed: 40,
       },
       {
         id: 'set_shark_scale',
-        name: 'Submerged Shark Scale Set',
-        pieces: [
-          {
-            id: 'mock_shark_helm',
-            rawName: 'Shark Scale Helmet',
-            name: '§6Shark Scale Helmet',
-            slot: 'helmet',
-            rarity: 'LEGENDARY',
-            texture: '/assets/minecraft/diamond_helmet.png',
-            stats: { scc: 3.4, fishingSpeed: 7.5 },
-            lore: ['§6Shark Scale Helmet', '§7Sea Creature Chance: §3+3.4%'],
-          },
-          {
-            id: 'mock_shark_chest',
-            rawName: 'Shark Scale Chestplate',
-            name: '§6Shark Scale Chestplate',
-            slot: 'chest',
-            rarity: 'LEGENDARY',
-            texture: '/assets/minecraft/diamond_chestplate.png',
-            stats: { scc: 3.4, fishingSpeed: 7.5 },
-            lore: ['§6Shark Scale Chestplate', '§7Sea Creature Chance: §3+3.4%'],
-          },
-          {
-            id: 'mock_shark_legs',
-            rawName: 'Shark Scale Leggings',
-            name: '§6Shark Scale Leggings',
-            slot: 'legs',
-            rarity: 'LEGENDARY',
-            texture: '/assets/minecraft/diamond_leggings.png',
-            stats: { scc: 3.4, fishingSpeed: 7.5 },
-            lore: ['§6Shark Scale Leggings', '§7Sea Creature Chance: §3+3.4%'],
-          },
-          {
-            id: 'mock_shark_boots',
-            rawName: 'Shark Scale Boots',
-            name: '§6Shark Scale Boots',
-            slot: 'boots',
-            rarity: 'LEGENDARY',
-            texture: '/assets/minecraft/diamond_boots.png',
-            stats: { scc: 3.4, fishingSpeed: 7.5 },
-            lore: ['§6Shark Scale Boots', '§7Sea Creature Chance: §3+3.4%'],
-          },
-        ],
+        name: 'Shark Scale Set (Storage)',
+        category: 'Fishing',
+        pieces: defaultArmor.map((a) => ({
+          ...a,
+          id: `shark_${a.slot}`,
+          rawName: `Shark Scale ${a.slot === 'helmet' ? 'Helmet' : a.slot === 'chest' ? 'Chestplate' : a.slot === 'legs' ? 'Leggings' : 'Boots'}`,
+          name: `§6Shark Scale ${a.slot === 'helmet' ? 'Helmet' : a.slot === 'chest' ? 'Chestplate' : a.slot === 'legs' ? 'Leggings' : 'Boots'}`,
+          rarity: 'LEGENDARY',
+          stats: { scc: 3.4, fishingSpeed: 7.5 },
+        })),
         totalSCC: 13.6,
         totalSpeed: 30,
-      },
-      {
-        id: 'set_magma_lord',
-        name: 'Magma Lord Armor Set (Wardrobe)',
-        pieces: [
-          {
-            id: 'mock_magma_helm',
-            rawName: 'Magma Lord Head',
-            name: '§6Magma Lord Head',
-            slot: 'helmet',
-            rarity: 'LEGENDARY',
-            texture: '/assets/minecraft/diamond_helmet.png',
-            stats: { scc: 4.5, fishingSpeed: 12 },
-            lore: ['§6Magma Lord Head', '§7Sea Creature Chance: §3+4.5%'],
-          },
-          {
-            id: 'mock_magma_chest',
-            rawName: 'Magma Lord Chestplate',
-            name: '§6Magma Lord Chestplate',
-            slot: 'chest',
-            rarity: 'LEGENDARY',
-            texture: '/assets/minecraft/diamond_chestplate.png',
-            stats: { scc: 4.5, fishingSpeed: 12 },
-            lore: ['§6Magma Lord Chestplate', '§7Sea Creature Chance: §3+4.5%'],
-          },
-          {
-            id: 'mock_magma_legs',
-            rawName: 'Magma Lord Leggings',
-            name: '§6Magma Lord Leggings',
-            slot: 'legs',
-            rarity: 'LEGENDARY',
-            texture: '/assets/minecraft/diamond_leggings.png',
-            stats: { scc: 4.5, fishingSpeed: 12 },
-            lore: ['§6Magma Lord Leggings', '§7Sea Creature Chance: §3+4.5%'],
-          },
-          {
-            id: 'mock_magma_boots',
-            rawName: 'Magma Lord Boots',
-            name: '§6Magma Lord Boots',
-            slot: 'boots',
-            rarity: 'LEGENDARY',
-            texture: '/assets/minecraft/diamond_boots.png',
-            stats: { scc: 4.5, fishingSpeed: 12 },
-            lore: ['§6Magma Lord Boots', '§7Sea Creature Chance: §3+4.5%'],
-          },
-        ],
-        totalSCC: 18,
-        totalSpeed: 48,
       },
     ];
 
@@ -490,89 +410,71 @@ export async function getPlayerProfile(req, res) {
             });
           }
 
-          // Check for Shark Scale armor in backpacks
-          const sharkPieces = allStorageItems
-            .filter((it) =>
-              /shark.*(helmet|chestplate|leggings|boots)/i.test(it.tag?.display?.Name || '')
-            )
-            .map((it) => {
-              const name = (it.tag?.display?.Name || '').toLowerCase();
-              const slot = /helmet/i.test(name)
-                ? 'helmet'
-                : /chestplate/i.test(name)
-                  ? 'chest'
-                  : /leggings/i.test(name)
-                    ? 'legs'
-                    : 'boots';
-              return formatSkyblockItem(it, slot);
-            });
+          const formattedStorageItems = allStorageItems
+            .map((it) => formatSkyblockItem(it))
+            .filter(Boolean);
+
+          const knownFamilies = [
+            {
+              key: 'shark_scale',
+              name: 'Shark Scale Set',
+              pattern: /shark\s*scale/i,
+              category: 'Fishing',
+            },
+            {
+              key: 'young_dragon',
+              name: 'Young Dragon Set',
+              pattern: /young\s*dragon/i,
+              category: 'Dragon',
+            },
+            {
+              key: 'silver_hunter',
+              name: 'Silver Hunter Set',
+              pattern: /silver\s*hunter/i,
+              category: 'Hunter',
+            },
+            {
+              key: 'thunder',
+              name: 'Thunder Armor Set',
+              pattern: /thunder|terror/i,
+              category: 'Fishing',
+            },
+            { key: 'diver', name: "Diver's Armor Set", pattern: /diver/i, category: 'Fishing' },
+            { key: 'sponge', name: 'Sponge Armor Set', pattern: /sponge/i, category: 'Fishing' },
+            { key: 'angler', name: 'Angler Armor Set', pattern: /angler/i, category: 'Fishing' },
+          ];
 
           const armorSets = [equippedArmorSet];
 
-          if (sharkPieces.length >= 4) {
-            const sHelmet = sharkPieces.find((p) => p.slot === 'helmet') || sharkPieces[0];
-            const sChest = sharkPieces.find((p) => p.slot === 'chest') || sharkPieces[1];
-            const sLegs = sharkPieces.find((p) => p.slot === 'legs') || sharkPieces[2];
-            const sBoots = sharkPieces.find((p) => p.slot === 'boots') || sharkPieces[3];
+          for (const fam of knownFamilies) {
+            const matches = formattedStorageItems.filter((it) =>
+              fam.pattern.test(it.rawName || it.name || '')
+            );
+            if (matches.length >= 2) {
+              const helm =
+                matches.find((m) => /helmet|head|mask|cap/i.test(m.rawName || m.slot)) ||
+                matches[0];
+              const chest =
+                matches.find((m) => /chestplate|tunic|shirt/i.test(m.rawName || m.slot)) ||
+                matches[1];
+              const legs =
+                matches.find((m) => /leggings|pants|trunks/i.test(m.rawName || m.slot)) ||
+                matches[2];
+              const boots = matches.find((m) => /boots/i.test(m.rawName || m.slot)) || matches[3];
+              const pieces = [helm, chest, legs, boots].filter(Boolean);
+              const totalSCC = pieces.reduce((sum, p) => sum + (p?.stats?.scc || 0), 0);
+              const totalSpeed = pieces.reduce((sum, p) => sum + (p?.stats?.fishingSpeed || 0), 0);
 
-            armorSets.push({
-              id: 'set_shark_scale',
-              name: 'Submerged Shark Scale Set (Storage)',
-              pieces: [sHelmet, sChest, sLegs, sBoots],
-              totalSCC: 13.6,
-              totalSpeed: 30,
-            });
+              armorSets.push({
+                id: `set_${fam.key}`,
+                name: `${fam.name} (Storage)`,
+                category: fam.category,
+                pieces,
+                totalSCC: Math.round(totalSCC * 10) / 10,
+                totalSpeed: Math.round(totalSpeed),
+              });
+            }
           }
-
-          // Always add Magma Lord Set to armor sets for gear exploration
-          armorSets.push({
-            id: 'set_magma_lord',
-            name: 'Magma Lord Armor Set (Wardrobe)',
-            pieces: [
-              {
-                id: 'magma_helm',
-                rawName: 'Magma Lord Head',
-                name: '§6Magma Lord Head',
-                slot: 'helmet',
-                rarity: 'LEGENDARY',
-                texture: '/assets/minecraft/diamond_helmet.png',
-                stats: { scc: 4.5, fishingSpeed: 12 },
-                lore: ['§6Magma Lord Head', '§7Sea Creature Chance: §3+4.5%'],
-              },
-              {
-                id: 'magma_chest',
-                rawName: 'Magma Lord Chestplate',
-                name: '§6Magma Lord Chestplate',
-                slot: 'chest',
-                rarity: 'LEGENDARY',
-                texture: '/assets/minecraft/diamond_chestplate.png',
-                stats: { scc: 4.5, fishingSpeed: 12 },
-                lore: ['§6Magma Lord Chestplate', '§7Sea Creature Chance: §3+4.5%'],
-              },
-              {
-                id: 'magma_legs',
-                rawName: 'Magma Lord Leggings',
-                name: '§6Magma Lord Leggings',
-                slot: 'legs',
-                rarity: 'LEGENDARY',
-                texture: '/assets/minecraft/diamond_leggings.png',
-                stats: { scc: 4.5, fishingSpeed: 12 },
-                lore: ['§6Magma Lord Leggings', '§7Sea Creature Chance: §3+4.5%'],
-              },
-              {
-                id: 'magma_boots',
-                rawName: 'Magma Lord Boots',
-                name: '§6Magma Lord Boots',
-                slot: 'boots',
-                rarity: 'LEGENDARY',
-                texture: '/assets/minecraft/diamond_boots.png',
-                stats: { scc: 4.5, fishingSpeed: 12 },
-                lore: ['§6Magma Lord Boots', '§7Sea Creature Chance: §3+4.5%'],
-              },
-            ],
-            totalSCC: 18,
-            totalSpeed: 48,
-          });
 
           // 2.5 Parse Equipment (Necklace, Cloak, Belt, Gloves)
           const rawEquip = await parseNbtBuffer(memberData?.inventory?.equipment_contents?.data);

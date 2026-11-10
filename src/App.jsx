@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import ScrollToTop from './components/common/ScrollToTop';
+import ProtectedRoute from './components/common/ProtectedRoute';
 import ProfilePage from './pages/ProfilePage';
 import OptimizerPage from './pages/OptimizerPage';
 import AccountPage from './pages/AccountPage';
@@ -18,13 +19,41 @@ export default function App() {
           <Navbar />
           <main className={styles.mainContent}>
             <Routes>
-              {/* Головна сторінка та динамічний маршрут профілю */}
-              <Route path="/" element={<ProfilePage />} />
-              <Route path="/profile/:player" element={<ProfilePage />} />
+              {/* Захищені маршрути (вимагають обов'язкової авторизації) */}
+              <Route
+                path="/"
+                element={
+                  <ProtectedRoute>
+                    <ProfilePage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/profile/:player"
+                element={
+                  <ProtectedRoute>
+                    <ProfilePage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/optimizer"
+                element={
+                  <ProtectedRoute>
+                    <OptimizerPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/account"
+                element={
+                  <ProtectedRoute>
+                    <AccountPage />
+                  </ProtectedRoute>
+                }
+              />
 
-              {/* Сторінки оптимізатора спорядження, кабінету та авторизації */}
-              <Route path="/optimizer" element={<OptimizerPage />} />
-              <Route path="/account" element={<AccountPage />} />
+              {/* Публічна сторінка входу / реєстрації */}
               <Route path="/login" element={<LoginPage />} />
 
               {/* Сторінка помилки 404 для неіснуючих маршрутів */}

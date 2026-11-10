@@ -797,6 +797,201 @@
   background-color: var(--border-color);
 }
 
+/* Modern Card-Based Set & Gear Selector UI */
+.setCardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.setCard {
+  background-color: var(--bg-card-sub);
+  border: 1px solid var(--border-color);
+  border-radius: 0.75rem;
+  padding: 0.875rem 1rem;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  user-select: none;
+}
+
+.setCard:hover {
+  border-color: rgba(255, 122, 69, 0.4);
+  background-color: rgba(255, 255, 255, 0.03);
+  transform: translateY(-1px);
+}
+
+.setCardActive {
+  background: linear-gradient(135deg, rgba(255, 122, 69, 0.12) 0%, var(--bg-card-sub) 100%);
+  border: 1.5px solid var(--color-accent);
+  border-radius: 0.75rem;
+  padding: 0.875rem 1rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  box-shadow: 0 4px 16px rgba(255, 122, 69, 0.15);
+  user-select: none;
+}
+
+.setCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.setCardTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.setRadio {
+  font-size: 0.875rem;
+  color: var(--color-accent);
+  line-height: 1;
+}
+
+.setCardName {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.setCardBadges {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  flex-shrink: 0;
+}
+
+.badgeGain {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--color-gain, #52c41a);
+  background-color: rgba(82, 196, 26, 0.12);
+  padding: 0.15rem 0.4rem;
+  border-radius: 0.35rem;
+  font-family: var(--font-mono);
+}
+
+.badgeSpeed {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #1890ff;
+  background-color: rgba(24, 144, 255, 0.12);
+  padding: 0.15rem 0.4rem;
+  border-radius: 0.35rem;
+  font-family: var(--font-mono);
+}
+
+.setMiniPieces {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 0.35rem 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.miniPieceSlot {
+  width: 28px;
+  height: 28px;
+  background-color: #2b221d;
+  border: 1px solid #140e0b;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+}
+
+.miniTexture {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+/* Rod Cards Selector */
+.rodCardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.rodCard {
+  background-color: var(--bg-card-sub);
+  border: 1px solid var(--border-color);
+  border-radius: 0.75rem;
+  padding: 0.75rem 0.875rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.rodCard:hover {
+  border-color: rgba(255, 122, 69, 0.4);
+  background-color: rgba(255, 255, 255, 0.03);
+  transform: translateY(-1px);
+}
+
+.rodCardActive {
+  background: linear-gradient(135deg, rgba(255, 122, 69, 0.12) 0%, var(--bg-card-sub) 100%);
+  border: 1.5px solid var(--color-accent);
+  border-radius: 0.75rem;
+  padding: 0.75rem 0.875rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  box-shadow: 0 4px 16px rgba(255, 122, 69, 0.15);
+  user-select: none;
+}
+
+.rodCardInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.rodCardName {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rodCardStats {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  margin-top: 0.125rem;
+}
+
+@media (max-width: 768px) {
+  .setCardGrid {
+    grid-template-columns: 1fr;
+  }
+  .rodCardGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 768px) {
   .authNoticeCard {
     flex-direction: column;

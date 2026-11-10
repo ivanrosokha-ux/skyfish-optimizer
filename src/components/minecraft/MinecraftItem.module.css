@@ -56,7 +56,7 @@
   image-rendering: crisp-edges;
 }
 
-/* Authentic Minecraft SkyBlock Tooltip */
+/* Authentic Minecraft SkyBlock Tooltip (~1.5x scaled for legibility) */
 .tooltip {
   position: absolute;
   left: 50%;
@@ -64,18 +64,18 @@
   background-color: rgba(16, 12, 22, 0.98);
   border: 2px solid #2d1844;
   outline: 2px solid #10081a;
-  border-radius: 4px;
-  padding: 10px 12px;
-  min-width: 250px;
-  max-width: 360px;
-  max-height: min(380px, 75vh);
+  border-radius: 6px;
+  padding: 14px 18px;
+  min-width: 340px;
+  max-width: 480px;
+  max-height: min(480px, 80vh);
   overflow-y: auto;
   pointer-events: auto;
   z-index: 1000;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.9);
+  box-shadow: 0 10px 36px rgba(0, 0, 0, 0.92);
   font-family: var(--font-mono, monospace);
-  font-size: 0.8125rem;
-  line-height: 1.35;
+  font-size: 0.9375rem;
+  line-height: 1.45;
   text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.9);
   white-space: normal;
   text-align: left;
@@ -98,26 +98,26 @@
 }
 
 .tooltipTop {
-  bottom: calc(100% + 8px);
+  bottom: calc(100% + 10px);
 }
 
 .tooltipBottom {
-  top: calc(100% + 8px);
+  top: calc(100% + 10px);
 }
 
 .tooltipTitle {
-  font-size: 0.875rem;
-  font-weight: 700;
-  margin-bottom: 6px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  padding-bottom: 4px;
+  font-size: 1.0625rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  padding-bottom: 6px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .pinBadge {
-  font-size: 0.625rem;
+  font-size: 0.75rem;
   color: var(--color-gold, #fadb14);
   font-weight: normal;
 }
@@ -125,9 +125,9 @@
 .tooltipLore {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
 }
 
 .loreLine {
-  min-height: 14px;
+  min-height: 18px;
 }

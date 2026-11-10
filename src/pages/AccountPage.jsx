@@ -45,9 +45,13 @@ export default function AccountPage() {
 
   const handleSaveNick = (e) => {
     e.preventDefault();
-    setUsername(inputNick);
-    setSaveSuccess(true);
-    setTimeout(() => setSaveSuccess(false), 2500);
+    const clean = inputNick.trim();
+    if (clean) {
+      setUsername(clean);
+      localStorage.setItem('skyfish_saved_nickname', clean);
+      setSaveSuccess(true);
+      setTimeout(() => setSaveSuccess(false), 2500);
+    }
   };
 
   const handleLogout = () => {
